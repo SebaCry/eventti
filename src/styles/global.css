@@ -13,10 +13,6 @@
   --font-sans: 'Jost', ui-sans-serif, system-ui, sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   font-family: var(--font-sans);
   background: var(--color-cream);
@@ -35,22 +31,17 @@ body {
   background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
 }
 
-/* Aparición al hacer scroll. Sólo donde hay scroll-driven animations:
-   sin @supports, los navegadores sin soporte dejarían el contenido invisible. */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .reveal {
-      animation: reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 5% cover 28%;
-    }
+/* Entrada suave al cargar */
+@media (prefers-reduced-motion: no-preference) {
+  main > * {
+    animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 }
 
-@keyframes reveal {
+@keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(28px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
