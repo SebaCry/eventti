@@ -1,0 +1,373 @@
+---
+import { Icon } from 'astro-icon/components';
+import '../styles/global.css';
+
+const CONTACT = {
+  phone: '+1 (323) 592-2238',
+  whatsapp: '13235922238',
+  email: 'hello@eventti.com',
+  area: 'Serving events across California',
+};
+
+const services = [
+  {
+    icon: 'ph:heart-straight',
+    title: 'Weddings',
+    text: 'Full ceremony and reception setups: head tables, eucalyptus runners, candlelight and floral arches.',
+  },
+  {
+    icon: 'ph:cake',
+    title: 'Birthdays & Quinceañeras',
+    text: 'Custom backdrops, balloon garlands, neon signs and dessert tables that steal every photo.',
+  },
+  {
+    icon: 'ph:armchair',
+    title: 'Furniture',
+    text: 'Chiavari and folding chairs, round and banquet tables, linens and table runners in any shade.',
+  },
+  {
+    icon: 'ph:flower-tulip',
+    title: 'Decor & Florals',
+    text: 'Centerpieces, fresh greenery, candelabras, lanterns and pillar candles for that warm golden-hour glow.',
+  },
+  {
+    icon: 'ph:fork-knife',
+    title: 'Tableware & Glassware',
+    text: 'Rattan charger plates, gold flatware, glassware and linen napkins in the palette you choose.',
+  },
+  {
+    icon: 'ph:popcorn',
+    title: 'Snack Carts',
+    text: 'Vintage popcorn machine, cotton candy and a drink bar — attendant included.',
+  },
+];
+
+const gallery = [
+  { src: '/img/mesa-salvia.jpg', alt: 'Banquet table with sage greenery, candles and gold place settings', span: 'md:col-span-2 md:row-span-2' },
+  { src: '/img/backdrop-globos.jpg', alt: 'Backdrop with green and gold balloon garland and neon sign' },
+  { src: '/img/centro-flores.jpg', alt: 'Centerpiece of white hydrangeas and roses on a wood slice' },
+  { src: '/img/mesa-jardin.jpg', alt: 'Long garden table with burlap runner and candles at sunset' },
+  { src: '/img/maquina-popcorn.jpg', alt: 'Vintage popcorn cart' },
+  { src: '/img/camino-eucalipto.jpg', alt: 'Eucalyptus runner with pillar candles in glass along a long table', span: 'md:col-span-2' },
+  { src: '/img/montaje-dorado.jpg', alt: 'Place setting with rattan charger, sage napkin and gold flatware', span: 'md:col-span-2' },
+];
+
+const steps = [
+  { icon: 'ph:chat-circle-dots', title: 'Tell us your vision', text: 'Date, venue, guest count and the palette you have in mind. We reply the same day.' },
+  { icon: 'ph:palette', title: 'We design the setup', text: 'You get a proposal with furniture, decor and a flat price. No last-minute surprises.' },
+  { icon: 'ph:truck', title: 'Delivery & pickup', text: 'We arrive early, set everything up, and pick it all up after. You just enjoy the day.' },
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Eventti — Rentals &amp; Decor | Weddings &amp; Events in California</title>
+    <meta
+      name="description"
+      content="Eventti Rentals & Decor: furniture, decor and full event styling for weddings, quinceañeras and celebrations across California. Design, delivery and pickup included."
+    />
+    <meta name="theme-color" content="#0b0b0c" />
+    <link rel="icon" href="/img/monograma.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="antialiased">
+    <!-- Nav -->
+    <header class="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-ink/80 backdrop-blur-md">
+      <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+        <a href="#top" class="flex items-center gap-4">
+          <img src="/img/monograma.jpg" alt="Eventti Rentals & Decor" width="40" height="40" class="size-10 object-contain" />
+          <span class="font-display text-2xl leading-none tracking-wide gold-text">eventti</span>
+        </a>
+
+        <ul class="hidden items-center gap-8 text-[13px] uppercase tracking-[0.18em] text-cream/70 md:flex">
+          <li><a href="#services" class="transition hover:text-gold-light">Services</a></li>
+          <li><a href="#gallery" class="transition hover:text-gold-light">Gallery</a></li>
+          <li><a href="#process" class="transition hover:text-gold-light">How it works</a></li>
+        </ul>
+
+        <a
+          href={`https://wa.me/${CONTACT.whatsapp}`}
+          class="flex items-center gap-2 rounded-full border border-gold/50 px-4 py-2 text-[12px] uppercase tracking-[0.18em] text-gold-light transition hover:bg-gold hover:text-ink"
+        >
+          <Icon name="ph:whatsapp-logo" class="size-4" />
+          <span class="hidden sm:inline">Get a quote</span>
+        </a>
+      </nav>
+    </header>
+
+    <!-- Hero -->
+    <section id="top" class="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-ink">
+      <img
+        src="/img/salon-rosa.jpg"
+        alt=""
+        aria-hidden="true"
+        class="absolute inset-0 size-full scale-105 object-cover opacity-45"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-ink via-ink/50 to-ink"></div>
+
+      <div class="relative z-10 px-6 py-28 text-center">
+        <img
+          src="/img/logo.jpg"
+          alt="Eventti Rentals & Decor"
+          width="320"
+          height="320"
+          class="mx-auto w-52 sm:w-64"
+          style="mask-image: radial-gradient(circle, #000 60%, transparent 76%); -webkit-mask-image: radial-gradient(circle, #000 60%, transparent 76%);"
+        />
+
+        <p class="mt-6 text-[11px] uppercase tracking-[0.42em] text-gold-light/80">Rentals &amp; Decor</p>
+
+        <h1 class="mt-5 font-display text-4xl font-light leading-[1.1] text-cream sm:text-6xl lg:text-7xl">
+          Your perfect day,<br />
+          <em class="gold-text not-italic">styled down to the last detail</em>
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-xl text-base font-light leading-relaxed text-cream/70">
+          Furniture, decor and full event styling for weddings, quinceañeras and celebrations.
+          We deliver it, set it up, and pick it up.
+        </p>
+
+        <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a
+            href="#contact"
+            class="rounded-full bg-gradient-to-r from-[#9a7418] via-gold-light to-[#9a7418] px-8 py-3.5 text-[12px] uppercase tracking-[0.22em] text-ink transition hover:brightness-110"
+          >
+            Request a quote
+          </a>
+          <a
+            href="#gallery"
+            class="rounded-full border border-cream/25 px-8 py-3.5 text-[12px] uppercase tracking-[0.22em] text-cream/80 transition hover:border-gold hover:text-gold-light"
+          >
+            See our setups
+          </a>
+        </div>
+      </div>
+
+      <a href="#services" aria-label="Scroll down" class="absolute bottom-8 z-10 text-gold-light/60 transition hover:text-gold-light">
+        <Icon name="ph:caret-down" class="size-7 animate-bounce" />
+      </a>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="bg-cream py-24 sm:py-32">
+      <div class="mx-auto max-w-6xl px-6">
+        <div class="reveal text-center">
+          <p class="text-[11px] uppercase tracking-[0.38em] text-gold">What we rent</p>
+          <h2 class="mt-4 font-display text-4xl font-light sm:text-5xl">Everything under one roof</h2>
+          <div class="gold-rule mx-auto mt-6 h-px w-40"></div>
+        </div>
+
+        <div class="mt-16 grid gap-px overflow-hidden rounded-2xl bg-ink/10 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            services.map((s) => (
+              <article class="reveal group bg-cream p-8 transition hover:bg-cream-deep">
+                <Icon name={s.icon} class="size-8 text-gold transition group-hover:scale-110" />
+                <h3 class="mt-5 font-display text-2xl">{s.title}</h3>
+                <p class="mt-3 text-sm font-light leading-relaxed text-ink/65">{s.text}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    <section id="gallery" class="bg-ink py-24 sm:py-32">
+      <div class="mx-auto max-w-6xl px-6">
+        <div class="reveal text-center">
+          <p class="text-[11px] uppercase tracking-[0.38em] text-gold">Gallery</p>
+          <h2 class="mt-4 font-display text-4xl font-light text-cream sm:text-5xl">Real setups</h2>
+          <div class="gold-rule mx-auto mt-6 h-px w-40"></div>
+        </div>
+
+        <div class="mt-16 grid auto-rows-[180px] grid-cols-2 gap-3 md:auto-rows-[200px] md:grid-cols-4">
+          {
+            gallery.map((g) => (
+              <figure class={`reveal group relative overflow-hidden rounded-xl ${g.span ?? ''}`}>
+                <img
+                  src={g.src}
+                  alt={g.alt}
+                  loading="lazy"
+                  class="size-full object-cover transition duration-700 group-hover:scale-105"
+                />
+                <div class="absolute inset-0 ring-1 ring-inset ring-gold/20 transition group-hover:ring-gold/60" />
+              </figure>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote -->
+    <section class="bg-sage/15 py-20">
+      <blockquote class="reveal mx-auto max-w-3xl px-6 text-center">
+        <Icon name="ph:sparkle" class="mx-auto size-6 text-gold" />
+        <p class="mt-6 font-display text-2xl font-light italic leading-relaxed sm:text-3xl">
+          “We walked into the venue and everything was already done — candles lit, tables set.
+          All we had to do was show up and enjoy it.”
+        </p>
+        <footer class="mt-6 text-[11px] uppercase tracking-[0.3em] text-ink/50">Ana &amp; Luis — September wedding</footer>
+      </blockquote>
+    </section>
+
+    <!-- Process -->
+    <section id="process" class="bg-cream py-24 sm:py-32">
+      <div class="mx-auto max-w-5xl px-6">
+        <div class="reveal text-center">
+          <p class="text-[11px] uppercase tracking-[0.38em] text-gold">How it works</p>
+          <h2 class="mt-4 font-display text-4xl font-light sm:text-5xl">Three steps, that's it</h2>
+          <div class="gold-rule mx-auto mt-6 h-px w-40"></div>
+        </div>
+
+        <ol class="mt-16 grid gap-10 sm:grid-cols-3">
+          {
+            steps.map((p, i) => (
+              <li class="reveal text-center">
+                <div class="mx-auto flex size-16 items-center justify-center rounded-full border border-gold/40">
+                  <Icon name={p.icon} class="size-7 text-gold" />
+                </div>
+                <p class="mt-5 text-[11px] uppercase tracking-[0.3em] text-gold/80">Step {i + 1}</p>
+                <h3 class="mt-2 font-display text-2xl">{p.title}</h3>
+                <p class="mt-3 text-sm font-light leading-relaxed text-ink/65">{p.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="relative overflow-hidden bg-ink py-24 sm:py-32">
+      <img src="/img/mesa-jardin.jpg" alt="" aria-hidden="true" class="absolute inset-0 size-full object-cover opacity-20" />
+      <div class="absolute inset-0 bg-gradient-to-b from-ink via-ink/80 to-ink"></div>
+
+      <div class="relative z-10 mx-auto grid max-w-5xl gap-14 px-6 lg:grid-cols-2">
+        <div class="reveal">
+          <p class="text-[11px] uppercase tracking-[0.38em] text-gold">Contact</p>
+          <h2 class="mt-4 font-display text-4xl font-light text-cream sm:text-5xl">
+            Tell us what you're<br /><em class="gold-text not-italic">celebrating</em>
+          </h2>
+          <p class="mt-5 max-w-md text-sm font-light leading-relaxed text-cream/60">
+            Send us your date and venue and we'll get back to you with a proposal and a flat price.
+            Dates book up fast, so the earlier the better.
+          </p>
+
+          <ul class="mt-10 space-y-4 text-sm text-cream/75">
+            <li>
+              <a href={`https://wa.me/${CONTACT.whatsapp}`} class="flex items-center gap-3 transition hover:text-gold-light">
+                <Icon name="ph:whatsapp-logo" class="size-5 text-gold" />{CONTACT.phone}
+              </a>
+            </li>
+            <li>
+              <a href={`tel:+${CONTACT.whatsapp}`} class="flex items-center gap-3 transition hover:text-gold-light">
+                <Icon name="ph:phone" class="size-5 text-gold" />Call us
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${CONTACT.email}`} class="flex items-center gap-3 transition hover:text-gold-light">
+                <Icon name="ph:envelope-simple" class="size-5 text-gold" />{CONTACT.email}
+              </a>
+            </li>
+            <li class="flex items-center gap-3">
+              <Icon name="ph:map-pin" class="size-5 text-gold" />{CONTACT.area}
+            </li>
+          </ul>
+        </div>
+
+        <!-- This form has no backend: it builds the message and opens WhatsApp. -->
+        <form id="quote" class="reveal space-y-4 rounded-2xl border border-gold/20 bg-ink-soft/80 p-8 backdrop-blur">
+          <label class="block">
+            <span class="text-[11px] uppercase tracking-[0.2em] text-cream/50">Name</span>
+            <input
+              name="name"
+              required
+              class="mt-2 w-full rounded-lg border border-cream/15 bg-ink/60 px-4 py-3 text-sm text-cream outline-none transition focus:border-gold"
+            />
+          </label>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-[11px] uppercase tracking-[0.2em] text-cream/50">Event date</span>
+              <input
+                type="date"
+                name="date"
+                required
+                class="mt-2 w-full rounded-lg border border-cream/15 bg-ink/60 px-4 py-3 text-sm text-cream outline-none transition focus:border-gold [color-scheme:dark]"
+              />
+            </label>
+            <label class="block">
+              <span class="text-[11px] uppercase tracking-[0.2em] text-cream/50">Guests</span>
+              <input
+                type="number"
+                name="guests"
+                min="1"
+                required
+                class="mt-2 w-full rounded-lg border border-cream/15 bg-ink/60 px-4 py-3 text-sm text-cream outline-none transition focus:border-gold"
+              />
+            </label>
+          </div>
+
+          <label class="block">
+            <span class="text-[11px] uppercase tracking-[0.2em] text-cream/50">Event type</span>
+            <select
+              name="type"
+              class="mt-2 w-full rounded-lg border border-cream/15 bg-ink/60 px-4 py-3 text-sm text-cream outline-none transition focus:border-gold"
+            >
+              <option>Wedding</option>
+              <option>Quinceañera</option>
+              <option>Birthday</option>
+              <option>Corporate event</option>
+              <option>Other</option>
+            </select>
+          </label>
+
+          <label class="block">
+            <span class="text-[11px] uppercase tracking-[0.2em] text-cream/50">Tell us more</span>
+            <textarea
+              name="message"
+              rows="3"
+              class="mt-2 w-full rounded-lg border border-cream/15 bg-ink/60 px-4 py-3 text-sm text-cream outline-none transition focus:border-gold"
+            ></textarea>
+          </label>
+
+          <button
+            type="submit"
+            class="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#9a7418] via-gold-light to-[#9a7418] px-6 py-3.5 text-[12px] uppercase tracking-[0.22em] text-ink transition hover:brightness-110"
+          >
+            <Icon name="ph:whatsapp-logo" class="size-4" />
+            Send via WhatsApp
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-ink py-10 text-center">
+      <img src="/img/monograma.jpg" alt="" width="56" height="56" class="mx-auto size-14 object-contain opacity-80" />
+      <p class="mt-4 text-[11px] uppercase tracking-[0.3em] text-cream/40">
+        Eventti Rentals &amp; Decor · {new Date().getFullYear()}
+      </p>
+    </footer>
+
+    <script is:inline define:vars={{ whatsapp: CONTACT.whatsapp }}>
+      document.getElementById('quote').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const d = Object.fromEntries(new FormData(e.target));
+        const text = `Hi Eventti! I'm ${d.name}.
+Event: ${d.type}
+Date: ${d.date}
+Guests: ${d.guests}
+${d.message || ''}`;
+        window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(text)}`, '_blank');
+      });
+    </script>
+  </body>
+</html>

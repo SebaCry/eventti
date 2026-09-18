@@ -1,0 +1,17 @@
+{
+  "name": "eventti",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@iconify-json/ph": "^1.2.2",
+    "@tailwindcss/vite": "^4.1.13",
+    "astro": "^5.14.1",
+    "astro-icon": "^1.1.5",
+    "tailwindcss": "^4.1.13"
+  }
+}
