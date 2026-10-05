@@ -1,29 +1,28 @@
 {
-  "hero-garden": {
-    "width": 2800,
-    "height": 1424,
+  "hero": {
+    "width": 4000,
+    "height": 2667,
     "widths": [
-      960,
-      1600,
-      2400,
-      2800
+      1200,
+      2000,
+      2800,
+      4000
     ],
     "alpha": false
   },
   "about-table": {
-    "width": 2280,
-    "height": 2752,
+    "width": 2400,
+    "height": 3600,
     "widths": [
       560,
       900,
-      1300,
-      1800
+      1300
     ],
     "alpha": false
   },
   "about-detail": {
-    "width": 2104,
-    "height": 1432,
+    "width": 1600,
+    "height": 2404,
     "widths": [
       320,
       640
@@ -31,8 +30,8 @@
     "alpha": false
   },
   "popcorn-cart": {
-    "width": 2712,
-    "height": 3616,
+    "width": 2000,
+    "height": 3000,
     "widths": [
       560,
       900,
@@ -41,8 +40,8 @@
     "alpha": false
   },
   "occ-birthday": {
-    "width": 1688,
-    "height": 1432,
+    "width": 2600,
+    "height": 1733,
     "widths": [
       400,
       720
@@ -50,8 +49,8 @@
     "alpha": false
   },
   "occ-quince": {
-    "width": 2144,
-    "height": 1320,
+    "width": 2600,
+    "height": 1736,
     "widths": [
       400,
       720
@@ -59,8 +58,8 @@
     "alpha": false
   },
   "occ-corporate": {
-    "width": 2104,
-    "height": 1136,
+    "width": 2600,
+    "height": 1733,
     "widths": [
       400,
       720
@@ -68,8 +67,8 @@
     "alpha": false
   },
   "occ-family": {
-    "width": 2144,
-    "height": 1432,
+    "width": 2600,
+    "height": 1733,
     "widths": [
       400,
       720
@@ -77,8 +76,8 @@
     "alpha": false
   },
   "occ-more": {
-    "width": 2104,
-    "height": 1320,
+    "width": 2600,
+    "height": 1734,
     "widths": [
       400,
       720
@@ -86,8 +85,8 @@
     "alpha": false
   },
   "pkg-basic": {
-    "width": 2520,
-    "height": 1072,
+    "width": 2000,
+    "height": 1500,
     "widths": [
       480,
       860
@@ -95,8 +94,8 @@
     "alpha": false
   },
   "pkg-celebration": {
-    "width": 2504,
-    "height": 760,
+    "width": 2000,
+    "height": 1333,
     "widths": [
       480,
       860
@@ -104,8 +103,8 @@
     "alpha": false
   },
   "pkg-complete": {
-    "width": 2504,
-    "height": 728,
+    "width": 2000,
+    "height": 1333,
     "widths": [
       480,
       860
@@ -113,8 +112,8 @@
     "alpha": false
   },
   "contact-bg": {
-    "width": 2144,
-    "height": 1136,
+    "width": 2600,
+    "height": 1733,
     "widths": [
       960,
       1800

@@ -1,26 +1,27 @@
-// Genera las imágenes de la web a partir de los originales HD de assets/hd.
+// Genera las imágenes de la web a partir de los originales.
 //
-// Los originales HD salen de reescalar 4x con Real-ESRGAN (realesrgan-x4plus) las fotos
-// de eventti-presentacion.pdf y del collage assets/2.jpeg, que vienen a muy baja resolución.
-// Ese paso se hizo una vez fuera del build; aquí sólo se recorta, se escala y se codifica.
+// - Fotos: assets/stock, de Unsplash en alta resolución (las descarga scripts/stock.mjs).
+// - Productos: assets/hd, el inventario real de eventti-presentacion.pdf. El PDF los trae
+//   diminutos, así que se reescalaron 4x con Real-ESRGAN (realesrgan-x4plus), una sola vez
+//   y fuera del build.
 //
 // Cada imagen sale en varios anchos y en AVIF + WebP + JPG/PNG, y se anota en
 // src/data/images.json para que <Photo> construya el srcset y reserve el alto.
 import sharp from 'sharp';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
+const STOCK = 'assets/stock';
 const HD = 'assets/hd';
 const OUT = 'public/img';
 mkdirSync(OUT, { recursive: true });
 mkdirSync('src/data', { recursive: true });
 
-// nombre en la web: [original en assets/hd, anchos a generar]
+// nombre en la web: [original en assets/stock, anchos a generar]
 const PHOTOS = {
-  // En móvil vertical se pinta a ~2x el alto de pantalla: necesita el ancho completo del original.
-  'hero-garden': ['about-arch.jpg', [960, 1600, 2400, 2800]],
-  // También es el fondo del hero en móvil, donde se pinta a ~1.03x el alto de pantalla.
-  'about-table': ['hero-table.jpg', [560, 900, 1300, 1800]],
-  'about-detail': ['gal-candles.jpg', [320, 640]],
+  // Se pinta más ancha que la pantalla (145 % en escritorio, ~1.9x el alto en móvil).
+  'hero': ['hero.jpg', [1200, 2000, 2800, 4000]],
+  'about-table': ['about-table.jpg', [560, 900, 1300]],
+  'about-detail': ['about-detail.jpg', [320, 640]],
   'popcorn-cart': ['popcorn-cart.jpg', [560, 900, 1300]],
   'occ-birthday': ['occ-birthday.jpg', [400, 720]],
   'occ-quince': ['occ-quince.jpg', [400, 720]],
@@ -30,7 +31,7 @@ const PHOTOS = {
   'pkg-basic': ['pkg-basic.jpg', [480, 860]],
   'pkg-celebration': ['pkg-celebration.jpg', [480, 860]],
   'pkg-complete': ['pkg-complete.jpg', [480, 860]],
-  'contact-bg': ['gal-eucalyptus.jpg', [960, 1800]],
+  'contact-bg': ['contact-bg.jpg', [960, 1800]],
 };
 
 // Productos recortados: el fondo casi blanco pasa a transparencia.
@@ -94,7 +95,7 @@ async function unscreen(input, extract, width, name) {
 }
 
 for (const [name, [file, widths]] of Object.entries(PHOTOS)) {
-  await emit(name, () => sharp(`${HD}/${file}`), widths, false);
+  await emit(name, () => sharp(`${STOCK}/${file}`), widths, false);
 }
 
 for (const [name, [file, widths]] of Object.entries(PRODUCTS)) {

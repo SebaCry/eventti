@@ -29,11 +29,9 @@ const packages = [
   { name: 'Complete', img: 'pkg-complete', price: 229, values: ['Up to 80', '10', '80', true, true, true] },
 ] as const;
 
-// Las fotos del hero van con object-cover, así que su ancho pintado depende del alto:
-// la apaisada (≈1.97:1) mide 1.97x el alto en pantallas más altas que ella; la vertical
-// de móvil (≈0.83:1) mide 0.83x el alto de su capa, que es un 124 % de la pantalla.
-const HERO_SIZES = '(max-aspect-ratio: 197/100) 197vh, 100vw';
-const HERO_SIZES_MOBILE = '103vh';
+// Ancho real al que se pinta la foto del hero (3:2, object-cover dentro de #hero-media):
+// en móvil, 1.5x el alto de una capa del 124 % de la pantalla; en escritorio, la capa del 145 %.
+const HERO_SIZES = '(max-width: 1023px) 186vh, 145vw';
 
 const steps = [
   { title: 'Get a quote', text: `Call ${PHONE} with your date, location and guest count.` },
@@ -65,22 +63,13 @@ const steps = [
       rel="preload"
       as="image"
       type="image/avif"
-      media="(min-width: 1024px)"
-      imagesrcset="/img/hero-garden-960.avif 960w, /img/hero-garden-1600.avif 1600w, /img/hero-garden-2400.avif 2400w, /img/hero-garden-2800.avif 2800w"
+      imagesrcset="/img/hero-1200.avif 1200w, /img/hero-2000.avif 2000w, /img/hero-2800.avif 2800w, /img/hero-4000.avif 4000w"
       imagesizes={HERO_SIZES}
-    />
-    <link
-      rel="preload"
-      as="image"
-      type="image/avif"
-      media="(max-width: 1023px)"
-      imagesrcset="/img/about-table-560.avif 560w, /img/about-table-900.avif 900w, /img/about-table-1300.avif 1300w, /img/about-table-1800.avif 1800w"
-      imagesizes={HERO_SIZES_MOBILE}
     />
 
     <meta property="og:title" content="Eventti Rentals & Decor" />
     <meta property="og:description" content="Your event, our passion. Party rentals and setup in Orange County, CA." />
-    <meta property="og:image" content="/img/hero-garden-1600.jpg" />
+    <meta property="og:image" content="/img/hero-2000.jpg" />
     <meta property="og:type" content="website" />
 
     <script
@@ -119,24 +108,18 @@ const steps = [
     <main id="main">
       <!-- ═══ Hero ═══════════════════════════════════════════════════════ -->
       <section id="top" class="hero grain relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-dusk">
-        <!-- En móvil: la versión vertical de la misma escena, y una capa más alta que la pantalla
-             para que la lente quede encima del texto y caiga sobre el ramo enfocado. -->
-        <div id="hero-media" class="absolute inset-x-0 top-0 -z-10 h-full max-lg:top-[-24%] max-lg:h-[124%]">
+        <!-- La capa es más grande que la pantalla para que las dalias enfocadas de la foto caigan
+             dentro del aro: 145 % de ancho en escritorio (aro a la derecha, texto sobre la parte
+             oscura), 124 % de alto en móvil (aro encima del texto). -->
+        <div
+          id="hero-media"
+          class="absolute top-0 left-0 -z-10 h-full w-full max-lg:top-[-24%] max-lg:h-[124%] lg:w-[145%]"
+        >
+          <Photo name="hero" alt="" sizes={HERO_SIZES} priority class="hero-dim absolute inset-0 size-full object-cover" />
           <Photo
-            name="hero-garden"
-            mobile="about-table"
-            alt=""
+            name="hero"
+            alt="Long banquet table set for dinner, lit by candles, with dahlia centerpieces"
             sizes={HERO_SIZES}
-            mobileSizes={HERO_SIZES_MOBILE}
-            priority
-            class="hero-dim absolute inset-0 size-full object-cover"
-          />
-          <Photo
-            name="hero-garden"
-            mobile="about-table"
-            alt="Backyard banquet tables with white linens, burlap runners and floral centerpieces under string lights"
-            sizes={HERO_SIZES}
-            mobileSizes={HERO_SIZES_MOBILE}
             priority
             class="hero-lens absolute inset-0 size-full object-cover"
           />
@@ -216,7 +199,7 @@ const steps = [
               <div class="aspect-[4/5] overflow-hidden rounded-t-full">
                 <Photo
                   name="about-table"
-                  alt="Banquet table with a burlap runner and mason jar centerpieces, string lights overhead"
+                  alt="Long garden table with white linens, glassware and floral centerpieces at dusk"
                   sizes="(min-width: 1024px) 34rem, 90vw"
                   class="size-full scale-[1.08] object-cover"
                 />
@@ -230,7 +213,7 @@ const steps = [
               <div class="size-full overflow-hidden rounded-full">
                 <Photo
                   name="about-detail"
-                  alt="Candles and greenery along a table set with rattan chargers"
+                  alt="White pillar candles and baby's breath along a table"
                   sizes="13rem"
                   class="size-full object-cover"
                 />
@@ -395,7 +378,7 @@ const steps = [
               <div class="aspect-[3/4] overflow-hidden rounded-t-full">
                 <Photo
                   name="popcorn-cart"
-                  alt="Vintage popcorn cart serving fresh popcorn at an outdoor party"
+                  alt="Classic red popcorn wagon with yellow spoked wheels"
                   sizes="(min-width: 1024px) 28rem, 90vw"
                   class="size-full scale-[1.08] object-cover"
                 />
@@ -469,8 +452,8 @@ const steps = [
                       </div>
                     ))}
                     <p class="relative grid place-items-center py-6">
-                      <span class:list={['brush absolute top-1/2 h-12 w-[62%] -translate-y-1/2 origin-left', dark ? 'bg-gold/80' : 'bg-gold/55']} />
-                      <span class="lining relative font-display text-5xl font-medium text-ink">
+                      <span class:list={['brush absolute top-1/2 h-12 w-[62%] -translate-y-1/2 origin-left', dark ? 'bg-gold/25' : 'bg-gold/55']} />
+                      <span class:list={['lining relative font-display text-5xl font-medium', dark ? 'text-gold-light' : 'text-ink']}>
                         <span class="align-super text-2xl">$</span><span class="price" data-to={p.price}>{p.price}</span>
                       </span>
                     </p>
@@ -522,8 +505,8 @@ const steps = [
                       ))}
                     </ul>
                     <p class="relative grid place-items-center py-6">
-                      <span class:list={['brush absolute top-1/2 h-12 w-40 -translate-y-1/2', dark ? 'bg-gold/80' : 'bg-gold/55']} />
-                      <span class="lining relative font-display text-5xl font-medium text-ink">
+                      <span class:list={['brush absolute top-1/2 h-12 w-40 -translate-y-1/2', dark ? 'bg-gold/25' : 'bg-gold/55']} />
+                      <span class:list={['lining relative font-display text-5xl font-medium', dark ? 'text-gold-light' : 'text-ink']}>
                         <span class="align-super text-2xl">$</span>{p.price}
                       </span>
                     </p>
