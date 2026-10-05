@@ -16,28 +16,62 @@
   --color-gold: #c9a227;
   --color-gold-light: #f0d98c;
   --color-gold-deep: #8a6a1f;
-  /* Un punto más oscuro que el dorado del PDF: sobre crema ese tono no llega a 4.5:1 */
   --color-gold-text: #87661a;
 
-  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  /* Cormorant para titulares y cifras, Pinyon para la caligrafía,
+     Jost para texto corrido y etiquetas. */
+  --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
   --font-script: 'Pinyon Script', ui-serif, Georgia, serif;
+  --font-sans: 'Jost', ui-sans-serif, system-ui, sans-serif;
+
+  --animate-duration: 1.4s;
 }
 
 body {
   font-family: var(--font-sans);
+  font-weight: 300;
   background: var(--color-night);
   color: var(--color-ink);
   overflow-x: hidden;
 }
 
-/* Los titulares del PDF van muy apretados */
+/* Titulares: Cormorant ligero y abierto. El peso lo da el tamaño, no la grasa.
+   Cormorant trae cifras de estilo antiguo, que se descuelgan de la línea base:
+   en cifras sueltas (precios, teléfono, pasos) se fuerzan las de caja alta. */
 .display {
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 0.95;
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.02;
 }
 
-/* Degradado metálico del logo, usado en los tres momentos caligráficos */
+/* Versales espaciadas para el titular del hero */
+.display-caps {
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  line-height: 1.02;
+  font-variant-numeric: lining-nums;
+}
+
+.lining {
+  font-variant-numeric: lining-nums;
+}
+
+.italic-accent {
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Etiquetas pequeñas: Jost con mucho aire */
+.eyebrow {
+  font-size: 0.6875rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+/* Degradado metálico del logo, usado en los momentos caligráficos */
 .gold-gradient {
   background: linear-gradient(96deg, #8a6a1f 0%, #e8cd8a 30%, #fff4d6 46%, #d4ab3d 60%, #8a6a1f 100%);
   -webkit-background-clip: text;
@@ -63,9 +97,16 @@ body {
   opacity: 0;
 }
 
+/* Transiciones largas y sin rebote: todo lo interactivo se mueve al mismo ritmo. */
+a,
+button {
+  transition-duration: 500ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 :where(a, button, input, select, textarea):focus-visible {
-  outline: 2px solid var(--color-gold-light);
-  outline-offset: 3px;
+  outline: 1px solid var(--color-gold-light);
+  outline-offset: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
