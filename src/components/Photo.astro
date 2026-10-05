@@ -1,28 +1,59 @@
 ---
-// WebP con respaldo JPG. Las dos versiones las genera scripts/images.mjs.
+// Imagen responsive: AVIF y WebP con srcset, y JPG/PNG de respaldo.
+// Los anchos y el tamaño original salen de src/data/images.json (lo escribe scripts/images.mjs),
+// así que basta con el nombre: el alto queda reservado y no hay saltos de layout.
+//
+// `mobile` cambia de foto por debajo de 1024 px (dirección de arte): el navegador sólo
+// descarga la que corresponde a la pantalla.
+import images from '../data/images.json';
+
 interface Props {
   name: string;
   alt: string;
-  width: string | number;
-  height: string | number;
+  /** Ancho con el que se pinta, para que el navegador elija la versión justa. */
+  sizes: string;
+  mobile?: string;
+  mobileSizes?: string;
   class?: string;
   priority?: boolean;
-  /** Respaldo para navegadores sin WebP. PNG para las imágenes con transparencia. */
-  fallback?: 'jpg' | 'png';
 }
 
-const { name, alt, width, height, class: className, priority = false, fallback = 'jpg' } = Astro.props;
+const { name, alt, sizes, mobile, mobileSizes, class: className, priority = false } = Astro.props;
+
+function entry(key: string) {
+  const e = images[key as keyof typeof images];
+  if (!e) throw new Error(`<Photo>: no hay imagen "${key}". Añádela en scripts/images.mjs y vuelve a ejecutarlo.`);
+  return e;
+}
+
+const main = entry(name);
+const alt2 = mobile ? entry(mobile) : null;
+
+const srcset = (key: string, widths: number[], ext: string) =>
+  widths.map((w) => `/img/${key}-${w}.${ext} ${w}w`).join(', ');
+const fallback = `/img/${name}-${main.widths[Math.min(1, main.widths.length - 1)]}.${main.alpha ? 'png' : 'jpg'}`;
+const MOBILE = '(max-width: 1023px)';
 ---
 
 <picture>
-  <source srcset={`/img/${name}.webp`} type="image/webp" />
+  {
+    alt2 && mobile && (
+      <>
+        <source media={MOBILE} type="image/avif" srcset={srcset(mobile, alt2.widths, 'avif')} sizes={mobileSizes ?? sizes} />
+        <source media={MOBILE} type="image/webp" srcset={srcset(mobile, alt2.widths, 'webp')} sizes={mobileSizes ?? sizes} />
+      </>
+    )
+  }
+  <source type="image/avif" srcset={srcset(name, main.widths, 'avif')} sizes={sizes} />
+  <source type="image/webp" srcset={srcset(name, main.widths, 'webp')} sizes={sizes} />
   <img
-    src={`/img/${name}.${fallback}`}
+    src={fallback}
     alt={alt}
-    width={width}
-    height={height}
+    width={main.width}
+    height={main.height}
     class={className}
     loading={priority ? 'eager' : 'lazy'}
     decoding={priority ? 'sync' : 'async'}
+    fetchpriority={priority ? 'high' : undefined}
   />
 </picture>

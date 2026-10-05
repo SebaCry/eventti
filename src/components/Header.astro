@@ -1,0 +1,126 @@
+---
+import { Icon } from 'astro-icon/components';
+import { NAV, PHONE, TEL, TIKTOK, LOCATION } from '../data/site.js';
+---
+
+<header
+  id="site-header"
+  class="site-header animated fadeInDown fixed inset-x-0 top-0 z-50"
+>
+  <!-- Velo para que el menú se lea sobre la foto antes de compactarse -->
+  <div class="header-veil pointer-events-none absolute inset-0 -z-10 h-32 bg-gradient-to-b from-dusk/70 to-transparent"></div>
+
+  <div class="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-5 lg:px-10">
+    <a href="#top" class="flex items-center gap-3" aria-label="Eventti Rentals & Decor, back to top">
+      <img src="/img/monogram.webp" alt="" width="44" height="44" class="size-11" />
+      <span class="gold-gradient font-display text-[1.75rem] leading-none font-medium tracking-wide">eventti</span>
+    </a>
+
+    <nav aria-label="Main" class="hidden lg:block">
+      <ul class="flex items-center gap-9 text-[0.8125rem] tracking-[0.14em] text-linen/75">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={item.href} class="nav-link hover:text-gold-light" data-section={item.href.slice(1)}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a
+        href={`tel:${TEL}`}
+        class="hidden items-center gap-2.5 rounded-full border border-gold/55 px-5 py-2.5 text-xs tracking-[0.16em] text-gold-light hover:border-gold hover:bg-gold hover:text-dusk sm:inline-flex"
+      >
+        <Icon name="ph:phone-light" class="size-4" />
+        <span class="lining">{PHONE}</span>
+      </a>
+
+      <button
+        id="menu-button"
+        type="button"
+        class="grid size-11 place-items-center rounded-full border border-gold/40 text-gold-light lg:hidden"
+        aria-expanded="false"
+        aria-controls="menu"
+        aria-label="Open menu"
+      >
+        <span class="burger flex w-5 flex-col gap-[7px]" aria-hidden="true">
+          <span class="block h-px bg-current"></span>
+          <span class="block h-px bg-current"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Menú móvil -->
+<div id="menu" class="menu grain dusk-glow fixed inset-0 z-40 flex flex-col px-6 pt-28 pb-10 lg:hidden" aria-hidden="true">
+  <nav aria-label="Mobile">
+    <ul class="space-y-1">
+      {
+        NAV.map((item, i) => (
+          <li class="menu-item" style={`--i:${i}`}>
+            <a href={item.href} class="block py-2 font-display text-[2.6rem] leading-tight text-linen" tabindex="-1">
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="menu-item" style={`--i:${NAV.length}`}>
+        <a href="#contact" class="block py-2 font-display text-[2.6rem] leading-tight text-linen italic" tabindex="-1">
+          Contact
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="menu-item mt-auto" style={`--i:${NAV.length + 1}`}>
+    <p class="gold-gradient font-script text-5xl leading-none">Rent. Decorate. Celebrate.</p>
+    <a
+      href={`tel:${TEL}`}
+      class="mt-8 flex items-center justify-center gap-3 rounded-full bg-gold py-4 text-sm tracking-[0.16em] text-dusk"
+      tabindex="-1"
+    >
+      <Icon name="ph:phone-light" class="size-5" />
+      <span class="lining">Call {PHONE}</span>
+    </a>
+    <div class="mt-6 flex items-center justify-between text-sm text-linen/60">
+      <span class="flex items-center gap-2"><Icon name="ph:map-pin-light" class="size-4 text-gold" />Orange County, CA</span>
+      <a href={TIKTOK} target="_blank" rel="noopener" class="flex items-center gap-2" tabindex="-1">
+        <Icon name="ph:tiktok-logo-light" class="size-4 text-gold" />TikTok
+      </a>
+    </div>
+    <span class="sr-only">{LOCATION}</span>
+  </div>
+</div>
+
+<script>
+  const button = document.getElementById('menu-button')!;
+  const menu = document.getElementById('menu')!;
+  const links = menu.querySelectorAll<HTMLAnchorElement>('a');
+
+  function setOpen(open: boolean) {
+    button.setAttribute('aria-expanded', String(open));
+    button.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menu.classList.toggle('is-open', open);
+    menu.setAttribute('aria-hidden', String(!open));
+    links.forEach((a) => (a.tabIndex = open ? 0 : -1));
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    // Un frame después: hasta que el menú no es visible, el navegador no deja enfocar dentro.
+    if (open) requestAnimationFrame(() => links[0]?.focus({ preventScroll: true }));
+  }
+
+  button.addEventListener('click', () => setOpen(button.getAttribute('aria-expanded') !== 'true'));
+  links.forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu.classList.contains('is-open')) {
+      setOpen(false);
+      button.focus();
+    }
+  });
+  // Si se agranda la ventana con el menú abierto, se cierra solo.
+  matchMedia('(min-width: 1024px)').addEventListener('change', (e) => e.matches && setOpen(false));
+</script>

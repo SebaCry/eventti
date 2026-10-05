@@ -1,0 +1,169 @@
+{
+  "hero-garden": {
+    "width": 2800,
+    "height": 1424,
+    "widths": [
+      960,
+      1600,
+      2400,
+      2800
+    ],
+    "alpha": false
+  },
+  "about-table": {
+    "width": 2280,
+    "height": 2752,
+    "widths": [
+      560,
+      900,
+      1300,
+      1800
+    ],
+    "alpha": false
+  },
+  "about-detail": {
+    "width": 2104,
+    "height": 1432,
+    "widths": [
+      320,
+      640
+    ],
+    "alpha": false
+  },
+  "popcorn-cart": {
+    "width": 2712,
+    "height": 3616,
+    "widths": [
+      560,
+      900,
+      1300
+    ],
+    "alpha": false
+  },
+  "occ-birthday": {
+    "width": 1688,
+    "height": 1432,
+    "widths": [
+      400,
+      720
+    ],
+    "alpha": false
+  },
+  "occ-quince": {
+    "width": 2144,
+    "height": 1320,
+    "widths": [
+      400,
+      720
+    ],
+    "alpha": false
+  },
+  "occ-corporate": {
+    "width": 2104,
+    "height": 1136,
+    "widths": [
+      400,
+      720
+    ],
+    "alpha": false
+  },
+  "occ-family": {
+    "width": 2144,
+    "height": 1432,
+    "widths": [
+      400,
+      720
+    ],
+    "alpha": false
+  },
+  "occ-more": {
+    "width": 2104,
+    "height": 1320,
+    "widths": [
+      400,
+      720
+    ],
+    "alpha": false
+  },
+  "pkg-basic": {
+    "width": 2520,
+    "height": 1072,
+    "widths": [
+      480,
+      860
+    ],
+    "alpha": false
+  },
+  "pkg-celebration": {
+    "width": 2504,
+    "height": 760,
+    "widths": [
+      480,
+      860
+    ],
+    "alpha": false
+  },
+  "pkg-complete": {
+    "width": 2504,
+    "height": 728,
+    "widths": [
+      480,
+      860
+    ],
+    "alpha": false
+  },
+  "contact-bg": {
+    "width": 2144,
+    "height": 1136,
+    "widths": [
+      960,
+      1800
+    ],
+    "alpha": false
+  },
+  "item-chair": {
+    "width": 816,
+    "height": 1000,
+    "widths": [
+      300,
+      600
+    ],
+    "alpha": true
+  },
+  "item-table": {
+    "width": 1720,
+    "height": 880,
+    "widths": [
+      420,
+      840
+    ],
+    "alpha": true
+  },
+  "item-linens": {
+    "width": 1240,
+    "height": 920,
+    "widths": [
+      360,
+      720
+    ],
+    "alpha": true
+  },
+  "item-popcorn": {
+    "width": 784,
+    "height": 1184,
+    "widths": [
+      260,
+      520
+    ],
+    "alpha": true
+  },
+  "item-decor": {
+    "width": 1040,
+    "height": 1080,
+    "widths": [
+      320,
+      640
+    ],
+    "alpha": true
+  }
+}

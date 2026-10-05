@@ -1,82 +1,115 @@
-// Prepara las imágenes de la landing a partir de los originales en assets/.
-// Las fotos salen de eventti-presentacion.pdf y llegan a baja resolución, así que
-// se reescalan con lanczos3 y un unsharp suave para que aguanten pantallas 2x.
-// Más de ~2.2x del original ya no aporta detalle, sólo peso.
+// Genera las imágenes de la web a partir de los originales HD de assets/hd.
+//
+// Los originales HD salen de reescalar 4x con Real-ESRGAN (realesrgan-x4plus) las fotos
+// de eventti-presentacion.pdf y del collage assets/2.jpeg, que vienen a muy baja resolución.
+// Ese paso se hizo una vez fuera del build; aquí sólo se recorta, se escala y se codifica.
+//
+// Cada imagen sale en varios anchos y en AVIF + WebP + JPG/PNG, y se anota en
+// src/data/images.json para que <Photo> construya el srcset y reserve el alto.
 import sharp from 'sharp';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 
-const SRC = 'assets';
+const HD = 'assets/hd';
 const OUT = 'public/img';
 mkdirSync(OUT, { recursive: true });
+mkdirSync('src/data', { recursive: true });
 
-// [origen, destino, ancho de salida]
-const PHOTOS = [
-  ['hero-table.png', 'hero-table', 1250],
-  ['about-arch.png', 'about-arch', 1500],
-  ['popcorn-cart.png', 'popcorn-cart', 1300],
-  ['pkg-basic.png', 'pkg-basic', 800],
-  ['pkg-celebration.png', 'pkg-celebration', 800],
-  ['pkg-complete.png', 'pkg-complete', 800],
-];
+// nombre en la web: [original en assets/hd, anchos a generar]
+const PHOTOS = {
+  // En móvil vertical se pinta a ~2x el alto de pantalla: necesita el ancho completo del original.
+  'hero-garden': ['about-arch.jpg', [960, 1600, 2400, 2800]],
+  // También es el fondo del hero en móvil, donde se pinta a ~1.03x el alto de pantalla.
+  'about-table': ['hero-table.jpg', [560, 900, 1300, 1800]],
+  'about-detail': ['gal-candles.jpg', [320, 640]],
+  'popcorn-cart': ['popcorn-cart.jpg', [560, 900, 1300]],
+  'occ-birthday': ['occ-birthday.jpg', [400, 720]],
+  'occ-quince': ['occ-quince.jpg', [400, 720]],
+  'occ-corporate': ['occ-corporate.jpg', [400, 720]],
+  'occ-family': ['occ-family.jpg', [400, 720]],
+  'occ-more': ['occ-more.jpg', [400, 720]],
+  'pkg-basic': ['pkg-basic.jpg', [480, 860]],
+  'pkg-celebration': ['pkg-celebration.jpg', [480, 860]],
+  'pkg-complete': ['pkg-complete.jpg', [480, 860]],
+  'contact-bg': ['gal-eucalyptus.jpg', [960, 1800]],
+};
 
-// Productos: vienen recortados sobre un fondo casi blanco que, sobre el crema,
-// se ve como un recuadro. Se pasa a transparencia.
-const PRODUCTS = [
-  ['item-chair.png', 'item-chair', 450],
-  ['item-table.png', 'item-table', 850],
-  ['item-linens.png', 'item-linens', 680],
-  ['item-popcorn.png', 'item-popcorn', 430],
-  ['item-decor.png', 'item-decor', 570],
-];
+// Productos recortados: el fondo casi blanco pasa a transparencia.
+const PRODUCTS = {
+  'item-chair': ['item-chair.png', [300, 600]],
+  'item-table': ['item-table.png', [420, 840]],
+  'item-linens': ['item-linens.png', [360, 720]],
+  'item-popcorn': ['item-popcorn.png', [260, 520]],
+  'item-decor': ['item-decor.png', [320, 640]],
+};
 
-/** Reescala con lanczos3 y recupera definición con un unsharp discreto. */
-function upscale(input, width) {
-  return sharp(input)
-    .resize({ width, kernel: 'lanczos3' })
-    .sharpen({ sigma: 0.7, m1: 0.4, m2: 0.9 });
-}
+const manifest = {};
 
-/** Vuelve transparente el fondo claro y uniforme, con un borde degradado para no dentar. */
-async function cutout(input, width) {
-  const { data, info } = await upscale(input, width)
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-
-  const OPAQUE = 232; // por debajo de esto el pixel es objeto
-  const CLEAR = 248; // por encima es fondo
-
-  for (let i = 0; i < data.length; i += 4) {
-    const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
-    const min = Math.min(r, g, b);
-    // Sólo toca grises claros: si hay color, es parte del objeto.
-    if (Math.max(r, g, b) - min > 12) continue;
-    if (min >= CLEAR) data[i + 3] = 0;
-    else if (min > OPAQUE) data[i + 3] = Math.round(255 * ((CLEAR - min) / (CLEAR - OPAQUE)));
+/** Codifica un original en todos los anchos y formatos. */
+async function emit(name, source, widths, alpha) {
+  const { width, height } = await source().metadata();
+  for (const w of widths) {
+    const img = source().resize({ width: w, withoutEnlargement: true });
+    await img.clone().avif({ quality: 55, effort: 4 }).toFile(`${OUT}/${name}-${w}.avif`);
+    await img.clone().webp({ quality: 80, effort: 5 }).toFile(`${OUT}/${name}-${w}.webp`);
+    if (alpha) await img.clone().png({ palette: true, quality: 88, compressionLevel: 9 }).toFile(`${OUT}/${name}-${w}.png`);
+    else await img.clone().jpeg({ quality: 82, mozjpeg: true }).toFile(`${OUT}/${name}-${w}.jpg`);
   }
-
-  return sharp(data, { raw: info });
+  manifest[name] = { width, height, widths, alpha };
 }
 
-for (const [src, name, width] of PHOTOS) {
-  const img = upscale(`${SRC}/${src}`, width);
-  await img.clone().webp({ quality: 88, effort: 6 }).toFile(`${OUT}/${name}.webp`);
-  await img.clone().jpeg({ quality: 86, mozjpeg: true }).toFile(`${OUT}/${name}.jpg`);
+/** Vuelve transparente un fondo claro y uniforme, con borde degradado para no dentar. */
+async function cutout(input) {
+  const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const OPAQUE = 232; // por debajo, objeto
+  const CLEAR = 248; // por encima, fondo
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i], g = data[i + 1], b = data[i + 2];
+    const min = Math.min(r, g, b);
+    if (Math.max(r, g, b) - min > 12) continue; // con color: es objeto
+    if (min >= CLEAR) data[i + 3] = 0;
+    else if (min > OPAQUE) data[i + 3] = Math.round((255 * (CLEAR - min)) / (CLEAR - OPAQUE));
+  }
+  return () => sharp(data, { raw: info });
 }
 
-for (const [src, name, width] of PRODUCTS) {
-  const img = await cutout(`${SRC}/${src}`, width);
-  await img.clone().webp({ quality: 90, effort: 6 }).toFile(`${OUT}/${name}.webp`);
-  // El PNG sólo lo ven navegadores sin WebP: paleta en vez de color real.
-  await img.clone().png({ palette: true, quality: 85, compressionLevel: 9 }).toFile(`${OUT}/${name}.png`);
+/** Saca el logo dorado de su fondo negro: lo inverso a un "screen". Sobre cualquier
+ *  fondo se compone igual que el original sobre negro, sin el recuadro. */
+async function unscreen(input, extract, width, name) {
+  let img = sharp(input);
+  if (extract) img = img.extract(extract);
+  const { data, info } = await img.resize(width).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const out = Buffer.alloc(info.width * info.height * 4);
+  for (let i = 0, j = 0; i < data.length; i += 3, j += 4) {
+    const r = data[i], g = data[i + 1], b = data[i + 2];
+    const a = Math.max(r, g, b);
+    if (a <= 14) continue; // el negro del JPEG nunca es 0 exacto
+    out[j] = Math.min(255, Math.round((r * 255) / a));
+    out[j + 1] = Math.min(255, Math.round((g * 255) / a));
+    out[j + 2] = Math.min(255, Math.round((b * 255) / a));
+    out[j + 3] = a;
+  }
+  const result = sharp(out, { raw: { width: info.width, height: info.height, channels: 4 } });
+  await result.clone().webp({ quality: 90, alphaQuality: 100 }).toFile(`${OUT}/${name}.webp`);
+  await result.clone().png({ compressionLevel: 9 }).toFile(`${OUT}/${name}.png`);
 }
 
-// Logo completo sobre negro y monograma suelto para el favicon.
-await sharp(`${SRC}/eventti.jpeg`).resize(700).webp({ quality: 92, effort: 6 }).toFile(`${OUT}/logo.webp`);
-await sharp(`${SRC}/eventti.jpeg`)
+for (const [name, [file, widths]] of Object.entries(PHOTOS)) {
+  await emit(name, () => sharp(`${HD}/${file}`), widths, false);
+}
+
+for (const [name, [file, widths]] of Object.entries(PRODUCTS)) {
+  await emit(name, await cutout(`${HD}/${file}`), widths, true);
+}
+
+await unscreen('assets/eventti.jpeg', null, 520, 'logo');
+await unscreen('assets/eventti.jpeg', { left: 270, top: 90, width: 500, height: 500 }, 160, 'monogram');
+
+// Favicon: el monograma sobre su negro, que en la pestaña se lee mejor.
+await sharp('assets/eventti.jpeg')
   .extract({ left: 270, top: 90, width: 500, height: 500 })
   .resize(96)
   .png({ palette: true, compressionLevel: 9 })
-  .toFile(`${OUT}/monogram.png`);
+  .toFile(`${OUT}/favicon.png`);
 
-console.log('images ok');
+writeFileSync('src/data/images.json', JSON.stringify(manifest, null, 2) + '\n');
+console.log(`images ok: ${Object.keys(manifest).length} sets`);

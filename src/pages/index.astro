@@ -1,36 +1,39 @@
 ---
 import { Icon } from 'astro-icon/components';
 import Photo from '../components/Photo.astro';
+import Ornament from '../components/Ornament.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { PHONE, TEL, TIKTOK, LOCATION, OCCASIONS } from '../data/site.js';
 import '../styles/global.css';
 
-const PHONE = '714 818 2320';
-const TEL = '+17148182320';
-// TODO: cambiar por el perfil real de TikTok.
-const TIKTOK = 'https://www.tiktok.com/@eventti';
-
-const occasions = [
-  { icon: 'ph:cake', title: 'Birthdays', text: "Kids' parties, milestone birthdays and everything in between." },
-  { icon: null, label: '15', title: 'Quinceañeras', text: 'A beautiful setup for her big day.' },
-  { icon: 'ph:users-three', title: 'Corporate events', text: 'Clean, professional setups for teams and clients.' },
-  { icon: 'ph:champagne', title: 'Family gatherings', text: 'Reunions, holidays and weekend get-togethers.' },
-  { icon: 'ph:confetti', title: 'And more', text: 'Showers, graduations and more. Just ask.' },
+const pillars = [
+  { icon: 'ph:armchair-light', title: 'Rent', text: 'Tables, chairs, tablecloths and a classic popcorn machine.' },
+  { icon: 'ph:flower-tulip-light', title: 'Decorate', text: 'Tablecloths in various colors and simple decor to set the mood.' },
+  { icon: 'ph:sparkle-light', title: 'Celebrate', text: 'We deliver and set up. You enjoy the moment.' },
 ];
 
 const inventory = [
-  { img: 'item-chair', title: 'Chairs', text: 'White folding chairs', w: 'w-24 sm:w-28' },
-  { img: 'item-table', title: '6 ft rectangular tables', text: 'Standard banquet size', w: 'w-40 sm:w-52' },
-  { img: 'item-linens', title: 'Tablecloths', text: 'Various colors', w: 'w-32 sm:w-40' },
-  { img: 'item-popcorn', title: 'Popcorn machine', text: 'Classic cart, as pictured', w: 'w-20 sm:w-24' },
-  { img: 'item-decor', title: 'Simple decor', text: 'Floral centerpieces & accents', w: 'w-28 sm:w-32' },
-];
+  { img: 'item-chair', title: 'Chairs', text: 'White folding chairs', w: 'w-28 sm:w-32' },
+  { img: 'item-table', title: '6 ft rectangular tables', text: 'Standard banquet size', w: 'w-44 sm:w-60' },
+  { img: 'item-linens', title: 'Tablecloths', text: 'Various colors', w: 'w-36 sm:w-44' },
+  { img: 'item-popcorn', title: 'Popcorn machine', text: 'Classic cart, as pictured', w: 'w-24 sm:w-28' },
+  { img: 'item-decor', title: 'Simple decor', text: 'Floral centerpieces & accents', w: 'w-32 sm:w-36' },
+] as const;
 
 const rows = ['Guests', '6 ft tables', 'Chairs', 'Tablecloths', 'Simple decor', 'Popcorn machine'];
 
 const packages = [
   { name: 'Basic', img: 'pkg-basic', price: 99, values: ['Up to 30', '4', '30', true, false, false] },
-  { name: 'Celebration', img: 'pkg-celebration', price: 149, values: ['Up to 50', '6', '50', true, true, true] },
+  { name: 'Celebration', img: 'pkg-celebration', price: 149, values: ['Up to 50', '6', '50', true, true, true], featured: true },
   { name: 'Complete', img: 'pkg-complete', price: 229, values: ['Up to 80', '10', '80', true, true, true] },
-];
+] as const;
+
+// Las fotos del hero van con object-cover, así que su ancho pintado depende del alto:
+// la apaisada (≈1.97:1) mide 1.97x el alto en pantallas más altas que ella; la vertical
+// de móvil (≈0.83:1) mide 0.83x el alto de su capa, que es un 124 % de la pantalla.
+const HERO_SIZES = '(max-aspect-ratio: 197/100) 197vh, 100vw';
+const HERO_SIZES_MOBILE = '103vh';
 
 const steps = [
   { title: 'Get a quote', text: `Call ${PHONE} with your date, location and guest count.` },
@@ -49,8 +52,8 @@ const steps = [
       name="description"
       content="Tables, chairs, tablecloths, decor and a popcorn machine for birthdays, quinceañeras and family gatherings in Orange County. We deliver and set up. Packages from $99."
     />
-    <meta name="theme-color" content="#000000" />
-    <link rel="icon" href="/img/monogram.png" />
+    <meta name="theme-color" content="#17110b" />
+    <link rel="icon" href="/img/favicon.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -58,11 +61,26 @@ const steps = [
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&family=Pinyon+Script&display=swap"
       rel="stylesheet"
     />
-    <link rel="preload" as="image" href="/img/hero-table.webp" type="image/webp" />
+    <link
+      rel="preload"
+      as="image"
+      type="image/avif"
+      media="(min-width: 1024px)"
+      imagesrcset="/img/hero-garden-960.avif 960w, /img/hero-garden-1600.avif 1600w, /img/hero-garden-2400.avif 2400w, /img/hero-garden-2800.avif 2800w"
+      imagesizes={HERO_SIZES}
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/avif"
+      media="(max-width: 1023px)"
+      imagesrcset="/img/about-table-560.avif 560w, /img/about-table-900.avif 900w, /img/about-table-1300.avif 1300w, /img/about-table-1800.avif 1800w"
+      imagesizes={HERO_SIZES_MOBILE}
+    />
 
     <meta property="og:title" content="Eventti Rentals & Decor" />
     <meta property="og:description" content="Your event, our passion. Party rentals and setup in Orange County, CA." />
-    <meta property="og:image" content="/img/hero-table.jpg" />
+    <meta property="og:image" content="/img/hero-garden-1600.jpg" />
     <meta property="og:type" content="website" />
 
     <script
@@ -88,237 +106,257 @@ const steps = [
     </noscript>
   </head>
 
-  <body class="bg-night">
+  <body>
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-full focus:bg-gold focus:px-5 focus:py-2 focus:text-sm focus:font-semibold focus:text-night"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-full focus:bg-gold focus:px-5 focus:py-2 focus:text-sm focus:text-dusk"
     >
       Skip to content
     </a>
 
-    <!-- Barra que entra cuando el hero sale de pantalla -->
-    <header
-      id="bar"
-      class="fixed inset-x-0 top-0 z-50 hidden border-b border-gold/15 bg-night/90 backdrop-blur-md"
-    >
-      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
-        <a href="#top" class="flex items-center gap-3">
-          <img src="/img/monogram.png" alt="Eventti Rentals & Decor" width="36" height="36" class="size-9" />
-          <span class="hidden text-sm tracking-[0.35em] text-cream/80 sm:block">EVENTTI</span>
-        </a>
-        <a
-          href={`tel:${TEL}`}
-          class="rounded-full border border-gold/60 px-6 py-2 text-xs tracking-[0.18em] text-gold-light uppercase hover:border-gold hover:bg-gold hover:text-night"
-        >
-          Call {PHONE}
-        </a>
-      </div>
-    </header>
+    <Header />
 
     <main id="main">
-      <!-- 1 · Hero -->
-      <section id="top" class="relative overflow-hidden bg-night">
-        <div
-          class="mx-auto grid max-w-6xl items-center gap-12 px-5 pt-20 pb-24 lg:grid-cols-[1.05fr_1fr] lg:gap-8 lg:pt-28 lg:pb-32"
-        >
-          <div>
-            <img
-              id="hero-logo"
-              src="/img/logo.webp"
-              alt="Eventti Rentals & Decor"
-              width="200"
-              height="200"
-              fetchpriority="high"
-              class="will-reveal w-40 sm:w-48"
-            />
+      <!-- ═══ Hero ═══════════════════════════════════════════════════════ -->
+      <section id="top" class="hero grain relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-dusk">
+        <!-- En móvil: la versión vertical de la misma escena, y una capa más alta que la pantalla
+             para que la lente quede encima del texto y caiga sobre el ramo enfocado. -->
+        <div id="hero-media" class="absolute inset-x-0 top-0 -z-10 h-full max-lg:top-[-24%] max-lg:h-[124%]">
+          <Photo
+            name="hero-garden"
+            mobile="about-table"
+            alt=""
+            sizes={HERO_SIZES}
+            mobileSizes={HERO_SIZES_MOBILE}
+            priority
+            class="hero-dim absolute inset-0 size-full object-cover"
+          />
+          <Photo
+            name="hero-garden"
+            mobile="about-table"
+            alt="Backyard banquet tables with white linens, burlap runners and floral centerpieces under string lights"
+            sizes={HERO_SIZES}
+            mobileSizes={HERO_SIZES_MOBILE}
+            priority
+            class="hero-lens absolute inset-0 size-full object-cover"
+          />
+          <svg id="hero-ring" class="hero-ring -rotate-90" viewBox="0 0 216 216" aria-hidden="true">
+            <circle cx="108" cy="108" r="100" fill="none" stroke="#ecd598" stroke-width="1.6" />
+            <circle cx="108" cy="108" r="106.5" fill="none" stroke="#c9a227" stroke-width="0.6" />
+          </svg>
+        </div>
 
-            <h1 class="mt-8">
-              <span
-                id="hero-line1"
-                class="display-caps block overflow-clip pb-2 text-[clamp(2rem,6.5vw,3.9rem)] text-cream"
-              >
+        <!-- Velos: lectura del texto a la izquierda y fundido hacia la sección siguiente -->
+        <div
+          class="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgb(23_17_11/0.85)_0%,rgb(23_17_11/0.5)_34%,transparent_54%)] max-lg:hidden"
+        ></div>
+        <div
+          class="absolute inset-x-0 bottom-0 -z-10 h-[62%] bg-gradient-to-t from-dusk via-dusk/75 to-transparent lg:h-48 lg:via-dusk/40"
+        ></div>
+
+        <div id="hero-content" class="mx-auto flex w-full max-w-7xl flex-1 items-end px-5 pt-28 pb-14 lg:items-center lg:px-10 lg:pb-20">
+          <div class="max-w-xl">
+            <h1>
+              <span id="hero-line1" class="display-caps block overflow-clip pb-2 text-[clamp(2.1rem,5.4vw,4.25rem)] text-linen">
                 YOUR EVENT
               </span>
               <span
                 id="hero-script"
-                class="gold-gradient -mt-2 block pb-4 font-script text-[clamp(3.25rem,11.5vw,7rem)] leading-[0.82]"
+                class="gold-gradient -mt-1 block pb-4 font-script text-[clamp(3.6rem,10vw,7.75rem)] leading-[0.82]"
               >
                 Our Passion
               </span>
             </h1>
 
-            <div id="hero-copy" class="will-reveal mt-6 max-w-sm">
-              <p class="text-lg leading-relaxed text-cream/70">Tables, chairs, machines, decor &amp; more.</p>
+            <div id="hero-copy">
+              <p class="max-w-md text-lg leading-relaxed text-linen/80">
+                Tables, chairs, machines, decor and more, delivered and set up at your event.
+              </p>
               <p class="mt-2 font-display text-2xl text-gold-light italic">Rent. Decorate. Celebrate.</p>
 
-              <div class="mt-10 flex flex-wrap items-center gap-7">
+              <div class="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
                 <a
                   href={`tel:${TEL}`}
-                  class="animated pulse infinite slower rounded-full bg-gold px-8 py-3.5 text-xs tracking-[0.2em] text-night uppercase hover:bg-gold-light"
+                  class="animated pulse infinite slower inline-flex items-center gap-2.5 rounded-full bg-gold px-8 py-4 text-xs tracking-[0.18em] text-dusk hover:bg-gold-light"
                 >
-                  Call {PHONE}
+                  <Icon name="ph:phone-light" class="size-4" />
+                  <span class="lining">Call {PHONE}</span>
                 </a>
                 <a
                   href="#packages"
-                  class="border-b border-cream/25 pb-1 text-xs tracking-[0.2em] text-cream/70 uppercase hover:border-gold-light hover:text-gold-light"
+                  class="border-b border-linen/30 pb-1 text-xs tracking-[0.18em] text-linen/80 hover:border-gold-light hover:text-gold-light"
                 >
                   See packages
                 </a>
               </div>
-
-              <p class="mt-10 flex items-center gap-2.5 text-sm tracking-wide text-cream/55">
-                <Icon name="ph:map-pin" class="size-4 text-gold" />
-                Newport Beach, Orange County, CA
-              </p>
-            </div>
-          </div>
-
-          <!-- Foto circular con el doble anillo dorado del PDF -->
-          <div class="relative mx-auto aspect-square w-full max-w-md lg:max-w-none">
-            <svg id="hero-rings" viewBox="0 0 200 200" class="absolute inset-0 size-full -rotate-90" aria-hidden="true">
-              <circle cx="100" cy="100" r="98" fill="none" stroke="#c9a227" stroke-width="0.8" />
-              <circle cx="100" cy="100" r="92" fill="none" stroke="#f0d98c" stroke-width="2.5" />
-            </svg>
-            <div id="hero-photo" class="absolute inset-[6.5%] overflow-hidden rounded-full">
-              <Photo
-                name="hero-table"
-                alt="Long banquet table set with white linens, burlap runner and floral centerpieces under string lights"
-                width="900"
-                height="1086"
-                priority
-                class="size-full scale-110 object-cover"
-              />
             </div>
           </div>
         </div>
+
+        <div id="hero-facts" class="will-reveal border-t border-gold/20 bg-dusk/45 backdrop-blur-md max-lg:hidden">
+          <ul class="mx-auto grid max-w-7xl grid-cols-3 divide-x divide-gold/15 px-10 py-5 text-sm text-linen/75">
+            <li class="flex items-center justify-center gap-3">
+              <Icon name="ph:truck-light" class="size-5 text-gold" />We deliver &amp; set up
+            </li>
+            <li class="flex items-center justify-center gap-3">
+              <Icon name="ph:tag-light" class="size-5 text-gold" /><span class="lining">Packages from $99</span>
+            </li>
+            <li class="flex items-center justify-center gap-3">
+              <Icon name="ph:map-pin-light" class="size-5 text-gold" />Newport Beach, Orange County
+            </li>
+          </ul>
+        </div>
       </section>
 
-      <!-- 2 · About -->
-      <section class="bg-cream py-24 sm:py-32">
-        <div class="mx-auto grid max-w-6xl items-center gap-14 px-5 lg:grid-cols-2 lg:gap-20">
-          <div id="about-photo" class="relative mx-auto w-full max-w-sm lg:max-w-none">
-            <div class="rounded-t-full rounded-b-2xl border border-gold/50 p-2">
-              <div class="h-[26rem] overflow-hidden rounded-t-full rounded-b-xl sm:h-[32rem]">
+      <!-- ═══ About ══════════════════════════════════════════════════════ -->
+      <section id="about" class="grain relative bg-linen py-28 lg:py-40">
+        <div class="mx-auto grid max-w-7xl items-center gap-20 px-5 lg:grid-cols-[1fr_1.05fr] lg:gap-24 lg:px-10">
+          <div id="about-media" class="relative mx-auto w-full max-w-md lg:max-w-lg">
+            <div class="rounded-t-full border border-gold/45 p-2.5">
+              <div class="aspect-[4/5] overflow-hidden rounded-t-full">
                 <Photo
-                  name="about-arch"
-                  alt="Banquet tables with floral centerpieces and white folding chairs in a backyard"
-                  width="1100"
-                  height="560"
+                  name="about-table"
+                  alt="Banquet table with a burlap runner and mason jar centerpieces, string lights overhead"
+                  sizes="(min-width: 1024px) 34rem, 90vw"
                   class="size-full scale-[1.08] object-cover"
                 />
               </div>
             </div>
+
+            <div
+              id="about-detail"
+              class="absolute -right-3 -bottom-12 size-40 rounded-full border border-gold/55 bg-linen p-2 sm:size-52 lg:-right-14"
+            >
+              <div class="size-full overflow-hidden rounded-full">
+                <Photo
+                  name="about-detail"
+                  alt="Candles and greenery along a table set with rattan chargers"
+                  sizes="13rem"
+                  class="size-full object-cover"
+                />
+              </div>
+            </div>
+
+            <svg class="absolute top-10 -left-4 size-7 text-gold sm:-left-8" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 0c1 7 5 11 12 12-7 1-11 5-12 12-1-7-5-11-12-12 7-1 11-5 12-12Z" fill="currentColor" />
+            </svg>
           </div>
 
           <div id="about-copy">
-            <span class="gold-line block h-px w-16"></span>
-            <h2 class="display mt-7 text-[clamp(2.75rem,7vw,4.5rem)] text-ink">
+            <Ornament class="text-gold" />
+            <h2 class="display mt-8 text-[clamp(2.9rem,6.4vw,5.25rem)] text-ink">
               Good people.<br /><em class="italic-accent">Great events.</em>
             </h2>
-            <p class="mt-7 max-w-prose text-lg leading-relaxed text-ink/75">
-              Eventti is an event rental and decor company based in Newport Beach, Orange County. We bring
-              the tables, chairs, tablecloths, decor and popcorn machine. Then we deliver and set it all up,
-              so you can focus on your guests.
+            <p class="mt-8 max-w-[34rem] text-lg leading-relaxed text-ink/75">
+              Eventti is an event rental and decor company based in Newport Beach, Orange County. We bring the tables,
+              chairs, tablecloths, decor and popcorn machine. Then we deliver and set it all up, so you can focus on your
+              guests.
             </p>
 
-            <dl class="mt-12 grid gap-8 border-t border-gold/30 pt-10 sm:grid-cols-3">
-              <div>
-                <dt class="font-display text-2xl text-gold-text italic">Rent</dt>
-                <dd class="mt-3 text-sm leading-relaxed text-ink/70">
-                  Tables, chairs, tablecloths and a classic popcorn machine.
-                </dd>
-              </div>
-              <div>
-                <dt class="font-display text-2xl text-gold-text italic">Decorate</dt>
-                <dd class="mt-3 text-sm leading-relaxed text-ink/70">
-                  Tablecloths in various colors and simple decor to set the mood.
-                </dd>
-              </div>
-              <div>
-                <dt class="font-display text-2xl text-gold-text italic">Celebrate</dt>
-                <dd class="mt-3 text-sm leading-relaxed text-ink/70">We deliver and set up. You enjoy the moment.</dd>
-              </div>
+            <dl class="mt-14 grid gap-10 border-t border-gold/30 pt-10 sm:grid-cols-3 sm:gap-8">
+              {
+                pillars.map((p) => (
+                  <div>
+                    <dt class="flex items-center gap-3 font-display text-[1.65rem] text-gold-text italic">
+                      <Icon name={p.icon} class="size-6 shrink-0 not-italic" />
+                      {p.title}
+                    </dt>
+                    <dd class="mt-3 text-sm leading-relaxed text-ink/70">{p.text}</dd>
+                  </div>
+                ))
+              }
             </dl>
           </div>
         </div>
       </section>
 
-      <!-- 3 · Occasions -->
-      <section id="occasions" class="relative overflow-hidden bg-night py-24 sm:py-32">
+      <!-- ═══ Occasions ══════════════════════════════════════════════════ -->
+      <section id="occasions" class="grain dusk-glow relative overflow-hidden pt-28 pb-24 lg:pt-36 lg:pb-44">
         <svg
-          class="pointer-events-none absolute -top-40 -right-32 size-[34rem] opacity-50"
-          viewBox="0 0 400 400"
+          class="pointer-events-none absolute -top-56 -right-48 size-[44rem] text-gold/15"
+          viewBox="0 0 200 200"
           aria-hidden="true"
         >
-          <circle cx="200" cy="200" r="190" fill="none" stroke="#c9a227" stroke-width="0.6" />
-          <circle cx="200" cy="200" r="170" fill="none" stroke="#c9a227" stroke-width="0.6" />
+          <circle cx="100" cy="100" r="98" fill="none" stroke="currentColor" stroke-width="0.35" />
+          <circle cx="100" cy="100" r="88" fill="none" stroke="currentColor" stroke-width="0.35" />
         </svg>
 
-        <div class="relative mx-auto max-w-6xl px-5">
-          <span class="gold-line block h-px w-16"></span>
-          <h2 class="display mt-7 text-[clamp(2.5rem,6.5vw,4rem)] text-cream">
-            Made for every
-            <span class="gold-gradient font-script text-[1.35em] leading-[0.8]">celebration</span>
-          </h2>
-          <p class="mt-6 max-w-xl text-lg leading-relaxed text-cream/60">
-            From a backyard birthday to a quinceañera, we set the table for your people.
-          </p>
+        <div class="relative mx-auto max-w-7xl px-5 lg:px-10">
+          <div id="occ-head" class="max-w-3xl">
+            <Ornament class="text-gold" />
+            <h2 class="display mt-8 text-[clamp(2.6rem,6vw,4.75rem)] text-linen">
+              Made for every
+              <span class="gold-gradient font-script text-[1.32em] leading-[0.8]">celebration</span>
+            </h2>
+            <p class="mt-6 max-w-xl text-lg leading-relaxed text-linen/65">
+              From a backyard birthday to a quinceañera, we set the table for your people.
+            </p>
+          </div>
 
-          <ul class="mt-16 grid grid-cols-2 gap-x-6 gap-y-12 sm:grid-cols-3 lg:grid-cols-5">
+          <ul
+            class="-mx-5 mt-20 flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-8 [scrollbar-width:none] lg:mx-0 lg:grid lg:grid-cols-5 lg:gap-6 lg:overflow-visible lg:px-0 lg:pb-0"
+          >
             {
-              occasions.map((o) => (
-                <li class="occasion text-center">
-                  <div
-                    class="relative mx-auto size-28 rounded-full bg-[radial-gradient(circle_at_50%_35%,#2a2114,#000_72%)] sm:size-32"
-                  >
-                    <svg viewBox="0 0 100 100" class="ring absolute inset-0 size-full -rotate-90" aria-hidden="true">
-                      <circle cx="50" cy="50" r="48" fill="none" stroke="#c9a227" stroke-width="1.2" />
-                    </svg>
-                    <div class="mark absolute inset-0 grid place-items-center text-gold-light">
-                      {o.icon ? (
-                        <Icon name={o.icon} class="size-11" />
-                      ) : (
-                        <span class="lining font-display text-5xl">{o.label}</span>
-                      )}
+              OCCASIONS.map((o) => (
+                <li class="occasion group w-[68vw] shrink-0 snap-center sm:w-[40vw] lg:w-auto lg:even:mt-16">
+                  <div class="relative">
+                    <div class="rounded-t-full border border-gold/35 p-1.5 transition-colors duration-700 group-hover:border-gold/80">
+                      <div class="aspect-[3/4] overflow-hidden rounded-t-full">
+                        <Photo
+                          name={o.img}
+                          alt={o.alt}
+                          sizes="(min-width: 1024px) 15rem, 68vw"
+                          class="size-full object-cover brightness-[0.88] transition duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06] group-hover:brightness-100"
+                        />
+                      </div>
                     </div>
+                    <span class="badge absolute -bottom-7 left-1/2 grid size-14 -translate-x-1/2 place-items-center rounded-full border border-gold/70 bg-dusk text-gold-light shadow-[0_0_0_6px_var(--color-dusk)] transition-shadow duration-700 group-hover:shadow-[0_0_0_6px_var(--color-dusk),0_0_28px_rgb(255_207_122/0.35)]">
+                      {o.icon ? (
+                        <Icon name={`${o.icon}-light`} class="size-6" />
+                      ) : (
+                        <span class="lining font-display text-2xl">{o.label}</span>
+                      )}
+                    </span>
                   </div>
-                  <h3 class="mt-6 font-display text-2xl text-cream">{o.title}</h3>
-                  <p class="mx-auto mt-2 max-w-[18ch] text-sm leading-relaxed text-cream/55">{o.text}</p>
+                  <h3 class="mt-12 text-center font-display text-[1.65rem] text-linen">{o.title}</h3>
+                  <p class="mx-auto mt-2 max-w-[22ch] text-center text-sm leading-relaxed text-linen/60">{o.text}</p>
                 </li>
               ))
             }
           </ul>
-
         </div>
       </section>
 
-      <!-- 4 · Inventory -->
-      <section id="inventory" class="bg-cream py-24 sm:py-32">
-        <div class="mx-auto max-w-6xl px-5">
-          <span class="gold-line block h-px w-16"></span>
-          <h2 class="display mt-7 max-w-3xl text-[clamp(2.5rem,6.5vw,4.25rem)] text-ink">
-            Everything you need to <em class="italic-accent">set the scene</em>
-          </h2>
-          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink/65">
-            The pieces behind every Eventti setup, delivered and set up at your event.
-          </p>
+      <!-- ═══ Rentals ════════════════════════════════════════════════════ -->
+      <section id="rentals" class="grain relative bg-linen py-28 lg:py-40">
+        <div class="mx-auto max-w-7xl px-5 lg:px-10">
+          <div class="grid gap-8 lg:grid-cols-[1.3fr_1fr] lg:items-end">
+            <div>
+              <Ornament class="text-gold" />
+              <h2 class="display mt-8 text-[clamp(2.6rem,6vw,4.75rem)] text-ink">
+                Everything you need to <em class="italic-accent">set the scene</em>
+              </h2>
+            </div>
+            <p class="max-w-md text-lg leading-relaxed text-ink/65 lg:justify-self-end">
+              The pieces behind every Eventti setup, delivered and set up at your event.
+            </p>
+          </div>
 
-          <ul class="mt-20 grid grid-cols-2 gap-x-6 gap-y-14 sm:grid-cols-3 lg:grid-cols-5">
+          <ul class="mt-24 grid grid-cols-2 gap-x-6 gap-y-16 sm:grid-cols-3 lg:grid-cols-5 lg:gap-x-0">
             {
               inventory.map((item) => (
-                <li class="item text-center">
-                  <div class="flex h-40 items-end justify-center sm:h-48">
+                <li class="item group text-center">
+                  <div class="relative flex h-48 items-end justify-center sm:h-60">
+                    <span class="absolute bottom-0 h-3 w-3/5 rounded-[50%] bg-ink/20 blur-md transition-all duration-700 group-hover:w-2/5 group-hover:bg-ink/12" />
                     <Photo
                       name={item.img}
                       alt={item.title}
-                      width="420"
-                      height="420"
-                      fallback="png"
-                      class={`max-h-full ${item.w} object-contain`}
+                      sizes="(min-width: 640px) 13rem, 45vw"
+                      class={`relative max-h-full ${item.w} object-contain transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-2`}
                     />
                   </div>
-                  <div class="rule mt-6 h-px origin-left bg-gold/45" />
-                  <h3 class="mt-5 font-display text-xl text-ink">{item.title}</h3>
+                  <div class="rule mt-7 h-px origin-left bg-gradient-to-r from-gold/20 via-gold/60 to-gold/20" />
+                  <h3 class="mt-6 font-display text-[1.4rem] text-ink">{item.title}</h3>
                   <p class="mt-1.5 text-sm text-ink/60">{item.text}</p>
                 </li>
               ))
@@ -327,165 +365,217 @@ const steps = [
         </div>
       </section>
 
-      <!-- 5 · Popcorn -->
-      <section class="overflow-hidden bg-night py-24 sm:py-32">
-        <div class="mx-auto grid max-w-6xl items-center gap-14 px-5 lg:grid-cols-2 lg:gap-20">
+      <!-- ═══ Popcorn ════════════════════════════════════════════════════ -->
+      <section class="grain dusk-glow relative overflow-hidden py-28 lg:py-40">
+        <div class="mx-auto grid max-w-7xl items-center gap-20 px-5 lg:grid-cols-2 lg:gap-24 lg:px-10">
           <div class="order-2 lg:order-1">
-            <h2 id="popcorn-script" class="gold-gradient pb-4 font-script text-[clamp(3rem,9vw,5.5rem)] leading-[0.9]">
+            <h2 id="popcorn-script" class="gold-gradient pb-4 font-script text-[clamp(3.4rem,8.5vw,6.5rem)] leading-[0.9]">
               Making events sweeter
             </h2>
             <div id="popcorn-copy" class="will-reveal">
-              <p class="mt-8 max-w-md text-lg leading-relaxed text-cream/70">
-                A classic popcorn cart that brings fresh popcorn and a little movie-night fun to any party.
-                It works as a snack station and a centerpiece in one.
+              <p class="mt-8 max-w-md text-lg leading-relaxed text-linen/75">
+                A classic popcorn cart that brings fresh popcorn and a little movie-night fun to any party. It works as a
+                snack station and a centerpiece in one.
               </p>
-              <p class="mt-10 inline-flex items-center gap-3 rounded-full border border-gold/50 px-6 py-3.5 text-sm text-cream/75">
-                <Icon name="ph:check" class="size-4 shrink-0 text-gold" />
-                Included in the <em class="font-display text-lg text-cream italic">Celebration</em> and
-                <em class="font-display text-lg text-cream italic">Complete</em> packages
+              <p class="mt-10 inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-gold/45 px-6 py-3.5 text-sm text-linen/75">
+                <Icon name="ph:check-light" class="size-4 shrink-0 text-gold" />
+                Included in the <em class="font-display text-lg text-linen italic">Celebration</em> and
+                <em class="font-display text-lg text-linen italic">Complete</em> packages
               </p>
             </div>
           </div>
 
-          <div id="popcorn-photo" class="order-1 mx-auto w-full max-w-sm lg:order-2 lg:max-w-none">
-            <div class="rounded-t-full rounded-b-2xl border border-gold/50 p-2">
-              <div class="h-[30rem] overflow-hidden rounded-t-full rounded-b-xl sm:h-[36rem]">
+          <div id="popcorn-media" class="relative order-1 mx-auto w-full max-w-sm lg:order-2 lg:max-w-md">
+            <!-- La luz de la máquina -->
+            <div
+              class="absolute -inset-16 bg-[radial-gradient(closest-side,rgb(255_207_122/0.24),transparent)] blur-2xl"
+              aria-hidden="true"
+            ></div>
+            <div class="relative rounded-t-full border border-gold/50 p-2.5">
+              <div class="aspect-[3/4] overflow-hidden rounded-t-full">
                 <Photo
                   name="popcorn-cart"
                   alt="Vintage popcorn cart serving fresh popcorn at an outdoor party"
-                  width="900"
-                  height="1200"
+                  sizes="(min-width: 1024px) 28rem, 90vw"
                   class="size-full scale-[1.08] object-cover"
                 />
               </div>
             </div>
+            <svg class="absolute -top-2 -right-6 size-9 text-gold-light" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 0c1 7 5 11 12 12-7 1-11 5-12 12-1-7-5-11-12-12 7-1 11-5 12-12Z" fill="currentColor" />
+            </svg>
           </div>
         </div>
       </section>
 
-      <!-- 6 · Packages -->
-      <section id="packages" class="bg-cream py-24 sm:py-32">
-        <div class="mx-auto max-w-6xl px-5">
-          <div class="flex flex-wrap items-end justify-between gap-4">
+      <!-- ═══ Packages ═══════════════════════════════════════════════════ -->
+      <section id="packages" class="grain relative bg-linen py-28 lg:py-40">
+        <div class="mx-auto max-w-7xl px-5 lg:px-10">
+          <div class="flex flex-wrap items-end justify-between gap-6">
             <div>
-              <span class="gold-line block h-px w-16"></span>
-              <h2 class="display mt-7 text-[clamp(2.5rem,6.5vw,4rem)] text-ink">
+              <Ornament class="text-gold" />
+              <h2 class="display mt-8 text-[clamp(2.6rem,6vw,4.75rem)] text-ink">
                 Choose your <em class="italic-accent">package</em>
               </h2>
             </div>
             <p class="text-sm text-ink/70">Starting prices. Delivery and setup fees may apply.</p>
           </div>
 
-          <!-- Comparativa en escritorio. Subgrid mantiene las filas alineadas
-               con la columna de etiquetas sin alturas fijas. -->
-          <div
-            class="mt-14 hidden grid-cols-[13rem_repeat(3,1fr)] grid-rows-[auto_auto_repeat(6,auto)_auto] gap-x-5 lg:grid"
-          >
-            <div class="col-start-1 row-span-full grid grid-rows-subgrid">
+          <!-- Escritorio: comparativa con subgrid para que las filas casen con las etiquetas -->
+          <div class="mt-16 hidden grid-cols-[12rem_repeat(3,1fr)] grid-rows-[repeat(10,auto)] gap-x-6 lg:grid">
+            <div class="col-start-1 row-span-full grid grid-rows-subgrid text-ink/75">
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
-              {rows.map((r) => <p class="flex items-center border-b border-ink/15 py-4 text-ink/80">{r}</p>)}
-              <p class="flex items-center pt-6 text-ink/80">Starting at</p>
+              {rows.map((r) => <p class="flex items-center border-b border-ink/12 py-4">{r}</p>)}
+              <p class="flex items-center pt-6">Starting at</p>
+              <span aria-hidden="true"></span>
             </div>
 
             {
-              packages.map((p) => (
-                <div class="pkg row-span-full grid grid-rows-subgrid overflow-hidden rounded-2xl border border-gold/35 bg-white">
-                  <h3 class="bg-night px-2 py-5 text-center text-xs tracking-[0.35em] text-cream">
-                    {p.name.toUpperCase()}
-                  </h3>
-                  <Photo name={p.img} alt={`${p.name} package setup`} width="640" height="270" class="h-40 w-full object-cover" />
-                  {p.values.map((v) => (
-                    <div class="mx-4 flex items-center justify-center border-b border-ink/10 py-4">
-                      {typeof v === 'boolean' ? (
-                        v ? (
-                          <span class="grid size-7 place-items-center rounded-full bg-gold/25 text-gold-text">
-                            <Icon name="ph:check-bold" class="size-4" />
-                          </span>
+              packages.map((p) => {
+                const dark = 'featured' in p && p.featured;
+                return (
+                  <div
+                    class:list={[
+                      'pkg row-span-full grid grid-rows-subgrid overflow-hidden rounded-t-[2.5rem] rounded-b-2xl border',
+                      dark ? 'border-gold/60 bg-dusk text-linen shadow-[0_30px_60px_-25px_rgb(23_17_11/0.55)]' : 'border-gold/30 bg-white text-ink',
+                    ]}
+                  >
+                    <h3
+                      class:list={[
+                        'px-2 py-5 text-center font-display text-2xl italic',
+                        dark ? 'text-gold-light' : 'bg-dusk text-linen',
+                      ]}
+                    >
+                      {p.name}
+                    </h3>
+                    <Photo name={p.img} alt={`${p.name} package setup`} sizes="22rem" class="h-44 w-full object-cover" />
+                    {p.values.map((v) => (
+                      <div class:list={['mx-5 flex items-center justify-center border-b py-4', dark ? 'border-linen/10' : 'border-ink/10']}>
+                        {typeof v === 'boolean' ? (
+                          v ? (
+                            <span class:list={['grid size-7 place-items-center rounded-full', dark ? 'bg-gold/20 text-gold-light' : 'bg-gold/20 text-gold-text']}>
+                              <Icon name="ph:check-bold" class="size-3.5" />
+                              <span class="sr-only">Included</span>
+                            </span>
+                          ) : (
+                            <span class="opacity-30">
+                              —<span class="sr-only">Not included</span>
+                            </span>
+                          )
                         ) : (
-                          <span class="text-ink/25">—</span>
-                        )
-                      ) : (
-                        <span class="text-ink/85">{v}</span>
-                      )}
-                    </div>
-                  ))}
-                  <p class="relative grid place-items-center py-6">
-                    <span class="brush absolute top-1/2 h-12 w-[62%] -translate-y-1/2 origin-left bg-gold/60" />
-                    <span class="lining relative font-display text-5xl font-medium text-ink">
-                      <span class="align-super text-2xl">$</span><span class="price" data-to={p.price}>{p.price}</span>
-                    </span>
-                  </p>
-                </div>
-              ))
+                          <span class="lining opacity-90">{v}</span>
+                        )}
+                      </div>
+                    ))}
+                    <p class="relative grid place-items-center py-6">
+                      <span class:list={['brush absolute top-1/2 h-12 w-[62%] -translate-y-1/2 origin-left', dark ? 'bg-gold/80' : 'bg-gold/55']} />
+                      <span class="lining relative font-display text-5xl font-medium text-ink">
+                        <span class="align-super text-2xl">$</span><span class="price" data-to={p.price}>{p.price}</span>
+                      </span>
+                    </p>
+                    <a
+                      href={`tel:${TEL}`}
+                      class:list={[
+                        'mx-5 mb-6 rounded-full py-3 text-center text-xs tracking-[0.16em]',
+                        dark ? 'bg-gold text-dusk hover:bg-gold-light' : 'border border-ink/25 hover:border-gold hover:bg-gold hover:text-dusk',
+                      ]}
+                    >
+                      Call to book {p.name}
+                    </a>
+                  </div>
+                );
+              })
             }
           </div>
 
-          <!-- Móvil -->
+          <!-- Móvil y tablet -->
           <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:hidden">
             {
-              packages.map((p) => (
-                <div class="pkg overflow-hidden rounded-2xl border border-gold/35 bg-white">
-                  <h3 class="bg-night py-4 text-center text-xs tracking-[0.35em] text-cream">
-                    {p.name.toUpperCase()}
-                  </h3>
-                  <Photo name={p.img} alt={`${p.name} package setup`} width="640" height="270" class="h-36 w-full object-cover" />
-                  <ul class="divide-y divide-ink/10 px-5">
-                    {rows.map((r, i) => (
-                      <li class="flex items-center justify-between gap-4 py-3 text-sm">
-                        <span class="text-ink/65">{r}</span>
-                        {typeof p.values[i] === 'boolean' ? (
-                          p.values[i] ? (
-                            <Icon name="ph:check-bold" class="size-4 text-gold-text" />
+              packages.map((p) => {
+                const dark = 'featured' in p && p.featured;
+                return (
+                  <div
+                    class:list={[
+                      'pkg overflow-hidden rounded-t-[2.5rem] rounded-b-2xl border',
+                      dark ? 'border-gold/60 bg-dusk text-linen' : 'border-gold/30 bg-white text-ink',
+                    ]}
+                  >
+                    <h3 class:list={['py-4 text-center font-display text-2xl italic', dark ? 'text-gold-light' : 'bg-dusk text-linen']}>
+                      {p.name}
+                    </h3>
+                    <Photo name={p.img} alt={`${p.name} package setup`} sizes="(min-width: 640px) 45vw, 90vw" class="h-40 w-full object-cover" />
+                    <ul class:list={['divide-y px-5', dark ? 'divide-linen/10' : 'divide-ink/10']}>
+                      {rows.map((r, i) => (
+                        <li class="flex items-center justify-between gap-4 py-3 text-sm">
+                          <span class="opacity-70">{r}</span>
+                          {typeof p.values[i] === 'boolean' ? (
+                            p.values[i] ? (
+                              <Icon name="ph:check-bold" class={`size-4 ${dark ? 'text-gold-light' : 'text-gold-text'}`} />
+                            ) : (
+                              <span class="opacity-30">—</span>
+                            )
                           ) : (
-                            <span class="text-ink/25">—</span>
-                          )
-                        ) : (
-                          <span class="font-semibold text-ink">{p.values[i]}</span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                  <p class="relative grid place-items-center py-6">
-                    <span class="brush absolute top-1/2 h-12 w-40 -translate-y-1/2 bg-gold/60" />
-                    <span class="lining relative font-display text-5xl font-medium text-ink">
-                      <span class="align-super text-2xl">$</span>{p.price}
-                    </span>
-                  </p>
-                </div>
-              ))
+                            <span class="lining">{p.values[i]}</span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                    <p class="relative grid place-items-center py-6">
+                      <span class:list={['brush absolute top-1/2 h-12 w-40 -translate-y-1/2', dark ? 'bg-gold/80' : 'bg-gold/55']} />
+                      <span class="lining relative font-display text-5xl font-medium text-ink">
+                        <span class="align-super text-2xl">$</span>{p.price}
+                      </span>
+                    </p>
+                    <a
+                      href={`tel:${TEL}`}
+                      class:list={[
+                        'mx-5 mb-6 block rounded-full py-3 text-center text-xs tracking-[0.16em]',
+                        dark ? 'bg-gold text-dusk' : 'border border-ink/25',
+                      ]}
+                    >
+                      Call to book {p.name}
+                    </a>
+                  </div>
+                );
+              })
             }
           </div>
         </div>
       </section>
 
-      <!-- 7 · Process -->
-      <section id="process" class="bg-sand py-24 sm:py-32">
-        <div class="mx-auto max-w-6xl px-5">
-          <span class="gold-line block h-px w-16"></span>
-          <h2 class="display mt-7 text-[clamp(2.5rem,6.5vw,4rem)] text-ink">
-            We deliver <em class="italic-accent">&amp; set up</em>
-          </h2>
-          <p class="mt-6 text-lg leading-relaxed text-ink/65">Booking takes one call. Here's how it works.</p>
+      <!-- ═══ Process ════════════════════════════════════════════════════ -->
+      <section id="process" class="grain relative bg-burlap py-28 lg:py-40">
+        <div class="mx-auto max-w-7xl px-5 lg:px-10">
+          <div class="text-center">
+            <Ornament align="center" class="text-gold-deep" />
+            <h2 class="display mt-8 text-[clamp(2.6rem,6vw,4.75rem)] text-ink">
+              We deliver <em class="italic-accent">&amp; set up</em>
+            </h2>
+            <p class="mt-6 text-lg leading-relaxed text-ink/65">Booking takes one call. Here's how it works.</p>
+          </div>
 
-          <ol class="relative mt-20 grid gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+          <ol class="relative mt-24 grid gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
             <span
               id="process-track"
-              class="absolute top-8 right-[12.5%] left-[12.5%] hidden h-px origin-left bg-gold/60 lg:block"
+              class="absolute top-9 right-[12.5%] left-[12.5%] hidden h-px origin-left bg-gradient-to-r from-gold-deep via-gold to-gold-deep lg:block"
               aria-hidden="true"
             ></span>
 
             {
               steps.map((s, i) => (
                 <li class="step relative text-center">
-                  <span class="dot lining relative z-10 mx-auto grid size-16 place-items-center rounded-full border border-gold bg-night font-display text-3xl text-gold-light">
+                  <span class="dot lining relative z-10 mx-auto grid size-[4.5rem] place-items-center rounded-full border border-gold bg-dusk font-display text-3xl text-gold-light shadow-[0_0_0_8px_var(--color-burlap)]">
                     {i + 1}
                   </span>
-                  <h3 class="mt-6 font-display text-2xl text-ink">{s.title}</h3>
-                  <p class="mx-auto mt-2.5 max-w-[26ch] text-sm leading-relaxed text-ink/65">
+                  <h3 class="mt-7 font-display text-[1.65rem] text-ink">{s.title}</h3>
+                  <p class="mx-auto mt-2.5 max-w-[26ch] text-sm leading-relaxed text-ink/70">
                     {i === 0 ? (
                       <>
-                        Call <a href={`tel:${TEL}`} class="border-b border-ink/40 text-ink hover:border-gold">{PHONE}</a>{' '}
+                        Call{' '}
+                        <a href={`tel:${TEL}`} class="lining border-b border-ink/40 text-ink hover:border-gold-deep">
+                          {PHONE}
+                        </a>{' '}
                         with your date, location and guest count.
                       </>
                     ) : (
@@ -497,57 +587,49 @@ const steps = [
             }
           </ol>
 
-          <p class="mt-20 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl bg-night px-8 py-7 text-sm text-cream/70 sm:rounded-full">
-            <Icon name="ph:truck" class="size-6 shrink-0 text-gold" />
+          <p class="mx-auto mt-24 flex max-w-4xl flex-wrap items-center justify-center gap-x-4 gap-y-2 rounded-3xl bg-dusk px-8 py-7 text-center text-sm text-linen/75 sm:rounded-full">
+            <Icon name="ph:truck-light" class="size-6 shrink-0 text-gold" />
             <span>Delivery and setup fees may apply based on distance, location, access and event setup.</span>
-            <a href={`tel:${TEL}`} class="font-display text-lg text-cream italic hover:text-gold-light">
+            <a href={`tel:${TEL}`} class="font-display text-lg text-linen italic hover:text-gold-light">
               Contact us for a personalized quote.
             </a>
           </p>
         </div>
       </section>
 
-      <!-- 8 · Contact -->
-      <section id="contact" class="relative overflow-hidden bg-night pt-24 pb-44 text-center sm:pt-32">
-        <svg
-          class="pointer-events-none absolute top-10 left-1/2 size-[42rem] -translate-x-1/2 opacity-40"
-          viewBox="0 0 400 400"
-          aria-hidden="true"
-        >
-          <circle cx="200" cy="200" r="198" fill="none" stroke="#c9a227" stroke-width="0.5" />
-        </svg>
+      <!-- ═══ Contact ════════════════════════════════════════════════════ -->
+      <section id="contact" class="grain relative isolate overflow-hidden bg-dusk pt-28 pb-40 text-center lg:pt-36 lg:pb-44">
+        <Photo name="contact-bg" alt="" sizes="100vw" class="absolute inset-0 -z-10 size-full object-cover opacity-30" />
+        <div
+          class="absolute inset-0 -z-10 bg-[radial-gradient(55%_60%_at_50%_42%,rgb(23_17_11/0.55),rgb(23_17_11/0.92)_75%)]"
+        ></div>
 
-        <div class="relative mx-auto max-w-3xl px-5">
+        <div class="relative mx-auto max-w-5xl px-5">
           <img src="/img/logo.webp" alt="Eventti Rentals & Decor" width="170" height="170" loading="lazy" class="mx-auto w-36 sm:w-44" />
 
-          <p id="contact-script" class="gold-gradient mt-4 pb-3 font-script text-[clamp(2.25rem,8vw,4.5rem)] leading-[0.95]">
+          <p id="contact-script" class="gold-gradient mt-6 pb-3 font-script text-[clamp(2.6rem,8vw,5rem)] leading-[0.95]">
             Let's make it unforgettable
           </p>
 
           <a
             id="contact-phone"
             href={`tel:${TEL}`}
-            class="display-caps mt-6 block text-[clamp(2.25rem,9vw,5.25rem)] text-cream hover:text-gold-light"
+            class="display-caps mt-8 block text-[clamp(2.4rem,9vw,5.5rem)] text-linen hover:text-gold-light"
           >
             {PHONE}
           </a>
+          <p class="mt-6 text-xs tracking-[0.4em] text-gold-light">Get a quote today</p>
 
-          <p class="eyebrow mt-7 text-gold-light">Get a quote today</p>
-
-          <div class="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-cream/70">
-            <p class="flex items-center gap-2">
-              <Icon name="ph:map-pin" class="size-5 text-gold" />
-              Newport Beach, Orange County, CA
+          <div class="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-linen/75">
+            <p class="flex items-center gap-2.5">
+              <Icon name="ph:map-pin-light" class="size-5 text-gold" />
+              {LOCATION}
             </p>
-            <a href={TIKTOK} target="_blank" rel="noopener" class="flex items-center gap-2 transition hover:text-gold-light">
-              <Icon name="ph:tiktok-logo" class="size-5 text-gold" />
+            <a href={TIKTOK} target="_blank" rel="noopener" class="flex items-center gap-2.5 hover:text-gold-light">
+              <Icon name="ph:tiktok-logo-light" class="size-5 text-gold" />
               Find us on TikTok
             </a>
           </div>
-
-          <p class="eyebrow mt-16 text-cream/35">
-            Events &nbsp;·&nbsp; People &nbsp;·&nbsp; Unforgettable moments
-          </p>
         </div>
 
         <!-- Curva dorada del cierre del PDF -->
@@ -562,6 +644,8 @@ const steps = [
         </svg>
       </section>
     </main>
+
+    <Footer />
 
     <script>
       import '../scripts/animations.js';

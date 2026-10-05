@@ -1,0 +1,85 @@
+---
+import { Icon } from 'astro-icon/components';
+import Ornament from './Ornament.astro';
+import { NAV, OCCASIONS, PHONE, TEL, TIKTOK, LOCATION } from '../data/site.js';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="grain relative overflow-hidden bg-dusk-deep text-linen/70">
+  <!-- Aro del logo, muy tenue, detrás de la marca -->
+  <svg
+    class="pointer-events-none absolute -top-48 -left-40 size-[34rem] text-gold/10"
+    viewBox="0 0 200 200"
+    aria-hidden="true"
+  >
+    <circle cx="100" cy="100" r="98" fill="none" stroke="currentColor" stroke-width="0.4" />
+    <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" stroke-width="0.4" />
+  </svg>
+
+  <div class="relative mx-auto max-w-7xl px-5 pt-20 pb-10 lg:px-10 lg:pt-24">
+    <div class="grid gap-14 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr] lg:gap-10">
+      <div>
+        <img src="/img/logo.webp" alt="Eventti Rentals & Decor" width="168" height="168" loading="lazy" class="w-40" />
+        <p class="mt-6 max-w-xs text-sm leading-relaxed">
+          Event rentals and decor from Newport Beach. We bring the tables, chairs, linens and popcorn cart, then
+          deliver and set it all up.
+        </p>
+      </div>
+
+      <nav aria-label="Footer">
+        <h2 class="font-display text-xl text-linen italic">Explore</h2>
+        <ul class="mt-5 space-y-3 text-sm">
+          {
+            NAV.map((item) => (
+              <li>
+                <a href={item.href} class="hover:text-gold-light">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="font-display text-xl text-linen italic">Occasions</h2>
+        <ul class="mt-5 space-y-3 text-sm">
+          {OCCASIONS.slice(0, 4).map((o) => <li>{o.title}</li>)}
+          <li>Showers &amp; graduations</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="font-display text-xl text-linen italic">Get a quote</h2>
+        <a href={`tel:${TEL}`} class="display-caps mt-4 block text-3xl text-linen hover:text-gold-light">{PHONE}</a>
+        <ul class="mt-6 space-y-3 text-sm">
+          <li class="flex items-start gap-2.5">
+            <Icon name="ph:map-pin-light" class="mt-0.5 size-4 shrink-0 text-gold" />
+            {LOCATION}
+          </li>
+          <li>
+            <a href={TIKTOK} target="_blank" rel="noopener" class="flex items-center gap-2.5 hover:text-gold-light">
+              <Icon name="ph:tiktok-logo-light" class="size-4 shrink-0 text-gold" />
+              Find us on TikTok
+            </a>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <Icon name="ph:truck-light" class="mt-0.5 size-4 shrink-0 text-gold" />
+            Delivery and setup across Orange County
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <Ornament align="center" class="mt-20 text-gold/35" />
+
+    <div class="mt-8 flex flex-col items-center justify-between gap-4 text-xs text-linen/45 sm:flex-row">
+      <p>&copy; {year} Eventti Rentals &amp; Decor</p>
+      <p class="gold-gradient font-script text-2xl">Events, people, unforgettable moments</p>
+      <a href="#top" class="flex items-center gap-2 hover:text-gold-light">
+        Back to top <Icon name="ph:caret-up-light" class="size-4" />
+      </a>
+    </div>
+  </div>
+</footer>

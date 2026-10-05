@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-/* Animate.css: sólo los módulos que usa la página (3 KB en vez de 93 KB).
+/* Animate.css: sólo los módulos que usa la página.
    Las clases de `source/` van sin el prefijo animate__ del build completo. */
 @import 'animate.css/source/_vars.css';
 @import 'animate.css/source/_base.css';
@@ -8,112 +8,268 @@
 @import 'animate.css/source/fading_entrances/fadeInDown.css';
 
 @theme {
-  /* Paleta tomada de eventti-presentacion.pdf */
-  --color-night: #000000;
-  --color-ink: #141414;
-  --color-cream: #faf8f3;
-  --color-sand: #f2e7d3;
+  /* La noche de las fotos: un jardín bajo bombillas, no un negro plano. */
+  --color-dusk: #17110b;
+  --color-dusk-2: #221910;
+  --color-dusk-deep: #0e0a06;
+  --color-ink: #1d1712;
+  /* Lino de los manteles y arpillera del camino de mesa */
+  --color-linen: #faf6ee;
+  --color-burlap: #efe4d0;
+  /* Oro del logo */
   --color-gold: #c9a227;
-  --color-gold-light: #f0d98c;
+  --color-gold-light: #ecd598;
   --color-gold-deep: #8a6a1f;
   --color-gold-text: #87661a;
+  --color-glow: #ffcf7a;
 
-  /* Cormorant para titulares y cifras, Pinyon para la caligrafía,
-     Jost para texto corrido y etiquetas. */
   --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
   --font-script: 'Pinyon Script', ui-serif, Georgia, serif;
   --font-sans: 'Jost', ui-sans-serif, system-ui, sans-serif;
 
-  --animate-duration: 1.4s;
+  --animate-duration: 1.2s;
 }
 
-body {
-  font-family: var(--font-sans);
-  font-weight: 300;
-  background: var(--color-night);
-  color: var(--color-ink);
-  overflow-x: hidden;
-}
+/* Todo lo propio va en capas: en Tailwind v4 el CSS sin capa gana a cualquier
+   utilidad, y una clase como .grain acabaría pisando un `fixed` o un `absolute`. */
 
-/* Titulares: Cormorant ligero y abierto. El peso lo da el tamaño, no la grasa.
-   Cormorant trae cifras de estilo antiguo, que se descuelgan de la línea base:
-   en cifras sueltas (precios, teléfono, pasos) se fuerzan las de caja alta. */
-.display {
-  font-family: var(--font-display);
-  font-weight: 300;
-  letter-spacing: -0.01em;
-  line-height: 1.02;
-}
-
-/* Versales espaciadas para el titular del hero */
-.display-caps {
-  font-family: var(--font-display);
-  font-weight: 300;
-  letter-spacing: 0.1em;
-  line-height: 1.02;
-  font-variant-numeric: lining-nums;
-}
-
-.lining {
-  font-variant-numeric: lining-nums;
-}
-
-.italic-accent {
-  font-style: italic;
-  font-weight: 400;
-}
-
-/* Etiquetas pequeñas: Jost con mucho aire */
-.eyebrow {
-  font-size: 0.6875rem;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  font-weight: 400;
-}
-
-/* Degradado metálico del logo, usado en los momentos caligráficos */
-.gold-gradient {
-  background: linear-gradient(96deg, #8a6a1f 0%, #e8cd8a 30%, #fff4d6 46%, #d4ab3d 60%, #8a6a1f 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.gold-line {
-  background: linear-gradient(90deg, var(--color-gold-deep), var(--color-gold-light), var(--color-gold-deep));
-}
-
-/* Pincelada dorada bajo los precios, como en el PDF */
-.brush {
-  clip-path: polygon(
-    1% 20%, 9% 4%, 23% 13%, 39% 3%, 56% 11%, 73% 2%, 88% 12%, 99% 5%,
-    100% 82%, 91% 97%, 75% 87%, 58% 98%, 41% 89%, 25% 99%, 11% 90%, 0% 96%
-  );
-}
-
-/* Estado inicial de lo que anima GSAP, para que no haya parpadeo antes de que corra.
-   Si el JS no llega a ejecutarse, el <noscript> de la página lo revierte. */
-.will-reveal {
-  opacity: 0;
-}
-
-/* Transiciones largas y sin rebote: todo lo interactivo se mueve al mismo ritmo. */
-a,
-button {
-  transition-duration: 500ms;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-:where(a, button, input, select, textarea):focus-visible {
-  outline: 1px solid var(--color-gold-light);
-  outline-offset: 4px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .will-reveal {
-    opacity: 1;
-  }
+@layer base {
   html {
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    background: var(--color-dusk);
+    color: var(--color-ink);
+    overflow-x: hidden;
+  }
+
+  a,
+  button {
+    transition-duration: 500ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  :where(a, button):focus-visible {
+    outline: 1px solid var(--color-gold-light);
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  /* ── Tipografía ────────────────────────────────────────────────────── */
+
+  /* Cormorant ligero: el peso lo da el tamaño. Sus cifras de estilo antiguo se
+     descuelgan de la línea base, así que donde hay números sueltos van las de caja alta. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: -0.012em;
+    line-height: 1.02;
+  }
+
+  .display-caps {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    font-variant-numeric: lining-nums;
+  }
+
+  .lining {
+    font-variant-numeric: lining-nums;
+  }
+
+  .italic-accent {
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .gold-gradient {
+    background: linear-gradient(96deg, #8a6a1f 0%, #e8cd8a 30%, #fff4d6 46%, #d4ab3d 60%, #8a6a1f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ── Texturas ──────────────────────────────────────────────────────── */
+
+  /* Grano de película: quita lo digital a los fondos lisos.
+     El contenedor necesita posición (relative, fixed...): la pone el markup. */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.09;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  /* Resplandor de bombilla para las secciones oscuras */
+  .dusk-glow {
+    background:
+      radial-gradient(60% 50% at 78% 20%, rgb(255 207 122 / 0.1), transparent 70%),
+      radial-gradient(50% 45% at 12% 85%, rgb(201 162 39 / 0.08), transparent 70%),
+      var(--color-dusk);
+  }
+
+  /* Pincelada dorada bajo los precios, como en el PDF */
+  .brush {
+    clip-path: polygon(
+      1% 20%, 9% 4%, 23% 13%, 39% 3%, 56% 11%, 73% 2%, 88% 12%, 99% 5%,
+      100% 82%, 91% 97%, 75% 87%, 58% 98%, 41% 89%, 25% 99%, 11% 90%, 0% 96%
+    );
+  }
+
+  /* ── Hero: el aro dorado del PDF como lente ────────────────────────── */
+
+  /* Dos capas de la misma foto. Fuera del aro, apagada y desenfocada; dentro, nítida.
+     --cx/--cy colocan la lente, --lens la abre (0→1) y --mx/--my la desplazan con el cursor. */
+  .hero {
+    --cx: 71%;
+    --cy: 50%;
+    --r: min(23vw, 33vh);
+    --lens: 1;
+    --mx: 0;
+    --my: 0;
+    --lx: calc(var(--cx) + var(--mx) * 1px);
+    --ly: calc(var(--cy) + var(--my) * 1px);
+    --lr: calc(var(--r) * var(--lens));
+  }
+
+  /* En móvil #hero-media mide 124 % del alto y sube un 24 %: el 54 % de la capa
+     (donde está el ramo enfocado) queda al 43 % de la pantalla, justo encima del texto. */
+  @media (max-width: 1023px) {
+    .hero {
+      --cx: 50%;
+      --cy: 54%;
+      --r: min(31vw, 18vh);
+    }
+  }
+
+  .hero-dim {
+    filter: blur(5px) brightness(0.42) saturate(0.85);
+  }
+
+  .hero-lens {
+    clip-path: circle(var(--lr) at var(--lx) var(--ly));
+  }
+
+  /* El aro mide un 8 % más que la lente para dejar el anillo de aire del PDF */
+  .hero-ring {
+    position: absolute;
+    width: calc(var(--r) * 2.16);
+    aspect-ratio: 1;
+    left: calc(var(--lx) - var(--r) * 1.08);
+    top: calc(var(--ly) - var(--r) * 1.08);
+  }
+
+  /* ── Header ────────────────────────────────────────────────────────── */
+
+  .site-header {
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color 600ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 600ms;
+  }
+  .site-header.is-scrolled {
+    background-color: rgb(23 17 11 / 0.86);
+    border-bottom-color: rgb(201 162 39 / 0.18);
+    backdrop-filter: blur(14px);
+  }
+  .header-veil {
+    transition: opacity 600ms;
+  }
+  .site-header.is-scrolled .header-veil {
+    opacity: 0;
+  }
+
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 1px;
+    background: var(--color-gold-light);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-link:hover::after,
+  .nav-link[aria-current='true']::after {
+    transform: scaleX(1);
+  }
+  .nav-link[aria-current='true'] {
+    color: var(--color-gold-light);
+  }
+
+  /* Menú móvil a pantalla completa */
+  .menu {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s 600ms;
+  }
+  .menu.is-open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .menu-item {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(16px);
+    transition:
+      opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      filter 700ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .menu.is-open .menu-item {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+    transition-delay: calc(120ms + var(--i) * 70ms);
+  }
+
+  .burger span {
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  [aria-expanded='true'] .burger span:first-child {
+    transform: translateY(4px) rotate(45deg);
+  }
+  [aria-expanded='true'] .burger span:last-child {
+    transform: translateY(-4px) rotate(-45deg);
+  }
+
+  /* Estado inicial de lo que anima GSAP, para que no parpadee antes de que corra.
+     Sin JS, el <noscript> de la página lo revierte. */
+  .will-reveal {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .will-reveal {
+      opacity: 1;
+    }
+    .menu,
+    .menu-item,
+    .site-header {
+      transition: none;
+    }
   }
 }
