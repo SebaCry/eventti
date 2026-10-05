@@ -1,0 +1,28 @@
+---
+// WebP con respaldo JPG. Las dos versiones las genera scripts/images.mjs.
+interface Props {
+  name: string;
+  alt: string;
+  width: string | number;
+  height: string | number;
+  class?: string;
+  priority?: boolean;
+  /** Respaldo para navegadores sin WebP. PNG para las imágenes con transparencia. */
+  fallback?: 'jpg' | 'png';
+}
+
+const { name, alt, width, height, class: className, priority = false, fallback = 'jpg' } = Astro.props;
+---
+
+<picture>
+  <source srcset={`/img/${name}.webp`} type="image/webp" />
+  <img
+    src={`/img/${name}.${fallback}`}
+    alt={alt}
+    width={width}
+    height={height}
+    class={className}
+    loading={priority ? 'eager' : 'lazy'}
+    decoding={priority ? 'sync' : 'async'}
+  />
+</picture>

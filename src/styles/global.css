@@ -1,50 +1,78 @@
 @import 'tailwindcss';
 
-@theme {
-  --color-ink: #0b0b0c;
-  --color-ink-soft: #16161a;
-  --color-cream: #f7f2e9;
-  --color-cream-deep: #efe6d7;
-  --color-gold: #c9a227;
-  --color-gold-light: #e8cd8a;
-  --color-sage: #8a9a80;
+/* Animate.css: sólo los módulos que usa la página (3 KB en vez de 93 KB).
+   Las clases de `source/` van sin el prefijo animate__ del build completo. */
+@import 'animate.css/source/_vars.css';
+@import 'animate.css/source/_base.css';
+@import 'animate.css/source/attention_seekers/pulse.css';
+@import 'animate.css/source/fading_entrances/fadeInDown.css';
 
-  --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
-  --font-sans: 'Jost', ui-sans-serif, system-ui, sans-serif;
+@theme {
+  /* Paleta tomada de eventti-presentacion.pdf */
+  --color-night: #000000;
+  --color-ink: #141414;
+  --color-cream: #faf8f3;
+  --color-sand: #f2e7d3;
+  --color-gold: #c9a227;
+  --color-gold-light: #f0d98c;
+  --color-gold-deep: #8a6a1f;
+  /* Un punto más oscuro que el dorado del PDF: sobre crema ese tono no llega a 4.5:1 */
+  --color-gold-text: #87661a;
+
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --font-script: 'Pinyon Script', ui-serif, Georgia, serif;
 }
 
 body {
   font-family: var(--font-sans);
-  background: var(--color-cream);
+  background: var(--color-night);
   color: var(--color-ink);
+  overflow-x: hidden;
 }
 
-/* Texto con el degradado metálico del logo */
-.gold-text {
-  background: linear-gradient(100deg, #9a7418 0%, #e8cd8a 38%, #fff6dc 50%, #d4ab3d 64%, #8c6a14 100%);
+/* Los titulares del PDF van muy apretados */
+.display {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+/* Degradado metálico del logo, usado en los tres momentos caligráficos */
+.gold-gradient {
+  background: linear-gradient(96deg, #8a6a1f 0%, #e8cd8a 30%, #fff4d6 46%, #d4ab3d 60%, #8a6a1f 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-.gold-rule {
-  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+.gold-line {
+  background: linear-gradient(90deg, var(--color-gold-deep), var(--color-gold-light), var(--color-gold-deep));
 }
 
-/* Entrada suave al cargar */
-@media (prefers-reduced-motion: no-preference) {
-  main > * {
-    animation: rise 1s cubic-bezier(0.22, 1, 0.36, 1) both;
-  }
+/* Pincelada dorada bajo los precios, como en el PDF */
+.brush {
+  clip-path: polygon(
+    1% 20%, 9% 4%, 23% 13%, 39% 3%, 56% 11%, 73% 2%, 88% 12%, 99% 5%,
+    100% 82%, 91% 97%, 75% 87%, 58% 98%, 41% 89%, 25% 99%, 11% 90%, 0% 96%
+  );
 }
 
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
+/* Estado inicial de lo que anima GSAP, para que no haya parpadeo antes de que corra.
+   Si el JS no llega a ejecutarse, el <noscript> de la página lo revierte. */
+.will-reveal {
+  opacity: 0;
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--color-gold-light);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .will-reveal {
     opacity: 1;
-    transform: none;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }
