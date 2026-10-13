@@ -210,6 +210,29 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     });
   });
 
+  // ── Photo & video: cada visor enfoca, como una cámara ───────────────
+  gsap.from('#media-head > *', {
+    ...FOCUS,
+    stagger: 0.12,
+    scrollTrigger: { trigger: '#media-head', start: 'top 80%' },
+  });
+
+  // Orden de las esquinas en el markup: arriba-izq, arriba-der, abajo-izq, abajo-der.
+  const CORNER_X = [-1, 1, -1, 1];
+  const CORNER_Y = [-1, -1, 1, 1];
+
+  gsap.utils.toArray('#photo-video .media-frame').forEach((frame, i) => {
+    gsap
+      .timeline({ scrollTrigger: { trigger: frame, start: 'top 85%' }, delay: i * 0.14 })
+      .from(frame.querySelector('img'), { opacity: 0, scale: 1.08, filter: 'blur(14px)', duration: 1.6 })
+      .from(
+        frame.querySelectorAll('.vf'),
+        { opacity: 0, x: (j) => CORNER_X[j] * 18, y: (j) => CORNER_Y[j] * 18, duration: 1.1 },
+        '-=1.15',
+      )
+      .from(frame.querySelectorAll('.media-cap > *'), { ...FOCUS, y: 14, duration: 1, stagger: 0.08 }, '-=0.85');
+  });
+
   // ── Process: la línea avanza con el scroll ──────────────────────────
   gsap.from('#process-track', {
     scaleX: 0,

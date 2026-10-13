@@ -140,7 +140,8 @@
   .hero {
     --cx: 49%;
     --cy: 52%;
-    --r: min(23vw, 33vh);
+    /* 20vw deja el aro fuera del párrafo del hero desde 1024 px */
+    --r: min(20vw, 33vh);
     --lens: 1;
     --mx: 0;
     --my: 0;

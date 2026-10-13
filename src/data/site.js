@@ -10,6 +10,7 @@ export const NAV = [
   { href: '#occasions', label: 'Occasions' },
   { href: '#rentals', label: 'Rentals' },
   { href: '#packages', label: 'Packages' },
+  { href: '#photo-video', label: 'Photo & video' },
   { href: '#process', label: 'How it works' },
 ];
 

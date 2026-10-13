@@ -32,6 +32,9 @@ const PHOTOS = {
   'pkg-celebration': ['pkg-celebration.jpg', [480, 860]],
   'pkg-complete': ['pkg-complete.jpg', [480, 860]],
   'contact-bg': ['contact-bg.jpg', [960, 1800]],
+  'media-photo': ['media-photo.jpg', [640, 1100, 1600]],
+  'media-video': ['media-video.jpg', [480, 800, 1100]],
+  'media-edit': ['media-edit.jpg', [480, 800, 1100]],
 };
 
 // Productos recortados: el fondo casi blanco pasa a transparencia.

@@ -16,8 +16,9 @@ import { NAV, PHONE, TEL, TIKTOK, LOCATION } from '../data/site.js';
       <span class="gold-gradient font-display text-[1.75rem] leading-none font-medium tracking-wide">eventti</span>
     </a>
 
-    <nav aria-label="Main" class="hidden lg:block">
-      <ul class="flex items-center gap-9 text-[0.8125rem] tracking-[0.14em] text-linen/75">
+    <!-- Con seis enlaces la barra completa necesita ~1280 px; por debajo va el menú. -->
+    <nav aria-label="Main" class="hidden xl:block">
+      <ul class="flex items-center gap-9 text-[0.8125rem] whitespace-nowrap tracking-[0.14em] text-linen/75">
         {
           NAV.map((item) => (
             <li>
@@ -33,7 +34,7 @@ import { NAV, PHONE, TEL, TIKTOK, LOCATION } from '../data/site.js';
     <div class="flex items-center gap-3">
       <a
         href={`tel:${TEL}`}
-        class="hidden items-center gap-2.5 rounded-full border border-gold/55 px-5 py-2.5 text-xs tracking-[0.16em] text-gold-light hover:border-gold hover:bg-gold hover:text-dusk sm:inline-flex"
+        class="hidden items-center gap-2.5 rounded-full border border-gold/55 px-5 py-2.5 text-xs whitespace-nowrap tracking-[0.16em] text-gold-light hover:border-gold hover:bg-gold hover:text-dusk sm:inline-flex"
       >
         <Icon name="ph:phone-light" class="size-4" />
         <span class="lining">{PHONE}</span>
@@ -42,7 +43,7 @@ import { NAV, PHONE, TEL, TIKTOK, LOCATION } from '../data/site.js';
       <button
         id="menu-button"
         type="button"
-        class="grid size-11 place-items-center rounded-full border border-gold/40 text-gold-light lg:hidden"
+        class="grid size-11 place-items-center rounded-full border border-gold/40 text-gold-light xl:hidden"
         aria-expanded="false"
         aria-controls="menu"
         aria-label="Open menu"
@@ -57,7 +58,7 @@ import { NAV, PHONE, TEL, TIKTOK, LOCATION } from '../data/site.js';
 </header>
 
 <!-- Menú móvil -->
-<div id="menu" class="menu grain dusk-glow fixed inset-0 z-40 flex flex-col px-6 pt-28 pb-10 lg:hidden" aria-hidden="true">
+<div id="menu" class="menu grain dusk-glow fixed inset-0 z-40 flex flex-col px-6 pt-28 pb-10 xl:hidden" aria-hidden="true">
   <nav aria-label="Mobile">
     <ul class="space-y-1">
       {
@@ -122,5 +123,5 @@ import { NAV, PHONE, TEL, TIKTOK, LOCATION } from '../data/site.js';
     }
   });
   // Si se agranda la ventana con el menú abierto, se cierra solo.
-  matchMedia('(min-width: 1024px)').addEventListener('change', (e) => e.matches && setOpen(false));
+  matchMedia('(min-width: 1280px)').addEventListener('change', (e) => e.matches && setOpen(false));
 </script>

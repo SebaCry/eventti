@@ -120,6 +120,36 @@
     ],
     "alpha": false
   },
+  "media-photo": {
+    "width": 3000,
+    "height": 2003,
+    "widths": [
+      640,
+      1100,
+      1600
+    ],
+    "alpha": false
+  },
+  "media-video": {
+    "width": 2400,
+    "height": 1600,
+    "widths": [
+      480,
+      800,
+      1100
+    ],
+    "alpha": false
+  },
+  "media-edit": {
+    "width": 2400,
+    "height": 1600,
+    "widths": [
+      480,
+      800,
+      1100
+    ],
+    "alpha": false
+  },
   "item-chair": {
     "width": 816,
     "height": 1000,

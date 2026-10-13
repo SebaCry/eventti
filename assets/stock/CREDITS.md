@@ -15,3 +15,6 @@ Fotos de [Unsplash](https://unsplash.com/license), licencia gratuita.
 - `pkg-celebration`: Carlos Barcia, https://unsplash.com/photos/Rvcoj37acS0
 - `pkg-complete`: Malia Moore, https://unsplash.com/photos/7PuxGo267Bw
 - `contact-bg`: Nadia Valko, https://unsplash.com/photos/0hAdietsUrE
+- `media-photo`: Samuel Cruz, https://unsplash.com/photos/6ilscB486Kw
+- `media-video`: Anastase Maragos, https://unsplash.com/photos/rj3LKtFaW9g
+- `media-edit`: Jakob Owens, https://unsplash.com/photos/Eznp0kLNkkI

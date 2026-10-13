@@ -24,6 +24,9 @@ const PHOTOS = {
   'pkg-celebration': ['Rvcoj37acS0', 'photo-1766719628920-854680a92c22', 'Carlos Barcia', 2000],
   'pkg-complete': ['7PuxGo267Bw', 'photo-1762216444265-a675abbb48dd', 'Malia Moore', 2000],
   'contact-bg': ['0hAdietsUrE', 'photo-1562050344-f7ad946cee35', 'Nadia Valko', 2600],
+  'media-photo': ['6ilscB486Kw', 'photo-1769230385107-bc6eaa7a123e', 'Samuel Cruz', 3000],
+  'media-video': ['rj3LKtFaW9g', 'photo-1738851952441-2a7d17487545', 'Anastase Maragos', 2400],
+  'media-edit': ['Eznp0kLNkkI', 'photo-1596725858508-70543890c732', 'Jakob Owens', 2400],
 };
 
 const credits = ['# Créditos de fotos', '', 'Fotos de [Unsplash](https://unsplash.com/license), licencia gratuita.', ''];

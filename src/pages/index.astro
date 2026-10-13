@@ -33,6 +33,41 @@ const packages = [
 // en móvil, 1.5x el alto de una capa del 124 % de la pantalla; en escritorio, la capa del 145 %.
 const HERO_SIZES = '(max-width: 1023px) 186vh, 145vw';
 
+// Foto y video: cada servicio va pegado a su imagen. La primera ocupa la columna grande.
+const media = [
+  {
+    img: 'media-photo',
+    icon: 'ph:camera-light',
+    title: 'Photography',
+    text: 'Candid moments, family portraits and every detail of your setup.',
+    alt: 'Photographer capturing guests dancing at an evening reception under a draped tent',
+    sizes: '(min-width: 1024px) 44rem, 92vw',
+    frame: 'lg:row-span-2',
+    // Más altas en móvil para que el texto quede abajo y no tape la foto
+    ratio: 'aspect-[4/5] sm:aspect-[4/3] lg:aspect-auto lg:h-full',
+  },
+  {
+    img: 'media-video',
+    icon: 'ph:video-camera-light',
+    title: 'Videography',
+    text: 'Your event on film, from the grand entrance to the last song.',
+    alt: 'Videographer with a camera rig filming a couple under string lights at night',
+    sizes: '(min-width: 1024px) 28rem, 92vw',
+    frame: '',
+    ratio: 'aspect-[4/5] sm:aspect-[16/10]',
+  },
+  {
+    img: 'media-edit',
+    icon: 'ph:film-slate-light',
+    title: 'Video editing',
+    text: 'A highlight video plus short clips sized for TikTok and Instagram.',
+    alt: 'Video editing timeline on a monitor in a warmly lit studio',
+    sizes: '(min-width: 1024px) 28rem, 92vw',
+    frame: '',
+    ratio: 'aspect-[4/5] sm:aspect-[16/10]',
+  },
+];
+
 const steps = [
   { title: 'Get a quote', text: `Call ${PHONE} with your date, location and guest count.` },
   { title: 'Choose your package', text: 'Basic, Celebration or Complete, based on your guest list.' },
@@ -48,7 +83,7 @@ const steps = [
     <title>Eventti Rentals &amp; Decor — Party rentals in Newport Beach, CA</title>
     <meta
       name="description"
-      content="Tables, chairs, tablecloths, decor and a popcorn machine for birthdays, quinceañeras and family gatherings in Orange County. We deliver and set up. Packages from $99."
+      content="Tables, chairs, tablecloths, decor and a popcorn machine for birthdays, quinceañeras and family gatherings in Orange County, plus event photography and video. We deliver and set up. Packages from $99."
     />
     <meta name="theme-color" content="#17110b" />
     <link rel="icon" href="/img/favicon.png" />
@@ -78,7 +113,8 @@ const steps = [
         '@context': 'https://schema.org',
         '@type': 'LocalBusiness',
         name: 'Eventti Rentals & Decor',
-        description: 'Event rental and decor company: tables, chairs, tablecloths, decor and popcorn machine.',
+        description:
+          'Event rental and decor company: tables, chairs, tablecloths, decor and popcorn machine, plus event photography, videography and video editing.',
         telephone: TEL,
         areaServed: 'Orange County, CA',
         address: { '@type': 'PostalAddress', addressLocality: 'Newport Beach', addressRegion: 'CA', addressCountry: 'US' },
@@ -523,6 +559,70 @@ const steps = [
                 );
               })
             }
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ Photo & video ══════════════════════════════════════════════ -->
+      <section id="photo-video" class="grain dusk-glow relative overflow-hidden py-28 lg:py-40">
+        <div class="mx-auto max-w-7xl px-5 lg:px-10">
+          <div id="media-head" class="grid gap-8 lg:grid-cols-[1.3fr_1fr] lg:items-end">
+            <div>
+              <Ornament class="text-gold" />
+              <h2 class="display mt-8 text-[clamp(2.6rem,6vw,4.75rem)] text-linen">
+                Photo &amp; <span class="gold-gradient font-script text-[1.32em] leading-[0.8]">video</span>
+              </h2>
+            </div>
+            <p class="max-w-md text-lg leading-relaxed text-linen/70 lg:justify-self-end">
+              We photograph and film your event, then edit it into a gallery and a highlight video you'll want to
+              share.
+            </p>
+          </div>
+
+          <!-- Cada imagen va en un visor de cámara: cuatro esquinas doradas que "enfocan" al entrar. -->
+          <ul class="mt-16 grid gap-5 lg:grid-cols-[1.55fr_1fr] lg:grid-rows-2 lg:gap-6">
+            {
+              media.map((m) => (
+                <li class:list={['media-frame group relative overflow-hidden rounded-md bg-dusk-2', m.frame]}>
+                  <div class:list={['relative', m.ratio]}>
+                    <Photo
+                      name={m.img}
+                      alt={m.alt}
+                      sizes={m.sizes}
+                      class="absolute inset-0 size-full object-cover transition-[scale] duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+                    />
+                  </div>
+                  <div
+                    class="pointer-events-none absolute inset-x-0 bottom-0 h-[72%] bg-gradient-to-t from-dusk/95 via-dusk/65 to-transparent"
+                    aria-hidden="true"
+                  />
+                  <span class="vf absolute top-4 left-4 size-7 border-t border-l border-gold-light/80" aria-hidden="true" />
+                  <span class="vf absolute top-4 right-4 size-7 border-t border-r border-gold-light/80" aria-hidden="true" />
+                  <span class="vf absolute bottom-4 left-4 size-7 border-b border-l border-gold-light/80" aria-hidden="true" />
+                  <span class="vf absolute right-4 bottom-4 size-7 border-r border-b border-gold-light/80" aria-hidden="true" />
+
+                  <!-- Padding inferior mayor que las esquinas del visor, para no pisarlas -->
+                  <div class="media-cap absolute inset-x-0 bottom-0 px-8 pb-14 sm:px-10 sm:pb-16">
+                    <h3 class="flex items-center gap-3 font-display text-[1.75rem] text-linen italic">
+                      <Icon name={m.icon} class="size-6 shrink-0 text-gold-light not-italic" />
+                      {m.title}
+                    </h3>
+                    <p class="mt-2 max-w-sm text-sm leading-relaxed text-linen/75">{m.text}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ul>
+
+          <div class="mt-14 flex flex-wrap items-center gap-x-8 gap-y-4">
+            <a
+              href={`tel:${TEL}`}
+              class="inline-flex items-center gap-2.5 rounded-full bg-gold px-8 py-4 text-xs tracking-[0.18em] text-dusk hover:bg-gold-light"
+            >
+              <Icon name="ph:phone-light" class="size-4" />
+              Call to book photo &amp; video
+            </a>
+            <p class="text-sm text-linen/60">Tell us your date and we'll plan the coverage with you.</p>
           </div>
         </div>
       </section>
